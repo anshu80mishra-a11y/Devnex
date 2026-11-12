@@ -1,0 +1,2079 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>DEVNEX — Everything You Need. One Workspace.</title>
+<style>
+:root{
+  --bg:#f4f5f7; --surface:#ffffff; --surface2:#eef0f4; --text:#15171c; --muted:#6b7280;
+  --accent:#6d5efc; --accent2:#00c9a7; --border:#e3e5ea; --danger:#e5484d;
+  --glass-bg:rgba(255,255,255,0.55); --glass-bg2:rgba(255,255,255,0.4); --glass-border:rgba(255,255,255,0.6);
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0f1115; --surface:#181b22; --surface2:#1f232c; --text:#eef0f4; --muted:#9298a6;
+    --accent:#8b7bff; --accent2:#2de3bd; --border:#2a2e38; --danger:#ff6b6f;
+    --glass-bg:rgba(30,33,42,0.5); --glass-bg2:rgba(30,33,42,0.35); --glass-border:rgba(255,255,255,0.09);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0f1115; --surface:#181b22; --surface2:#1f232c; --text:#eef0f4; --muted:#9298a6;
+  --accent:#8b7bff; --accent2:#2de3bd; --border:#2a2e38; --danger:#ff6b6f;
+  --glass-bg:rgba(30,33,42,0.5); --glass-bg2:rgba(30,33,42,0.35); --glass-border:rgba(255,255,255,0.09);
+  color-scheme: dark;
+}
+*{box-sizing:border-box;}
+html,body{height:100%;}
+body{
+  margin:0; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+  background:var(--bg); color:var(--text);
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+  position:relative;
+}
+body::after{
+  content:""; position:fixed; inset:0; z-index:-1;
+  background:
+    radial-gradient(circle at 12% 18%, rgba(109,94,252,0.30), transparent 42%),
+    radial-gradient(circle at 88% 12%, rgba(0,201,167,0.26), transparent 42%),
+    radial-gradient(circle at 25% 85%, rgba(0,201,167,0.18), transparent 40%),
+    radial-gradient(circle at 80% 80%, rgba(109,94,252,0.22), transparent 42%);
+  filter: blur(50px);
+}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--glass-bg);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);}
+header{
+  position:sticky; top:env(safe-area-inset-top,0px); z-index:5;
+  background:var(--glass-bg); backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--glass-border);
+  padding:14px 16px; display:flex; align-items:center; gap:10px;
+}
+.logo{font-weight:800; font-size:19px; letter-spacing:-0.5px;}
+.logo span{color:var(--accent);}
+.tagline{font-size:11px; color:var(--muted); margin-left:2px;}
+header .spacer{flex:1;}
+.theme-btn{
+  border:1px solid var(--glass-border); background:var(--glass-bg2); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); color:var(--text);
+  border-radius:10px; padding:8px 12px; font-size:13px; cursor:pointer;
+}
+.search-wrap{padding:12px 16px 4px;}
+#search{
+  width:100%; padding:11px 14px; border-radius:12px; border:1px solid var(--glass-border);
+  background:var(--glass-bg2); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); color:var(--text); font-size:14px; outline:none;
+  transition:box-shadow .2s ease, border-color .2s ease;
+}
+#search:focus{ box-shadow:0 0 0 3px rgba(109,94,252,0.28); border-color:var(--accent); }
+main{padding:12px 16px 32px; max-width:900px; margin:0 auto;}
+.cat-title{font-size:12px; text-transform:uppercase; letter-spacing:.06em; color:var(--muted); margin:18px 4px 8px;}
+.grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(140px,1fr)); gap:10px;}
+.card{
+  background:var(--glass-bg2); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px);
+  border:1px solid var(--glass-border); border-radius:14px; box-shadow:0 4px 18px rgba(0,0,0,0.06);
+  padding:14px 12px; cursor:pointer; text-align:left; transition:transform .12s ease, box-shadow .2s ease;
+  animation:fadeSlideUp .45s cubic-bezier(.22,.9,.32,1) backwards;
+}
+.card:active{transform:scale(0.95);}
+.card:hover{box-shadow:0 8px 24px rgba(109,94,252,0.18); transform:translateY(-2px);}
+.card .icon{font-size:22px; margin-bottom:6px; display:block;}
+.card .name{font-size:13px; font-weight:600; line-height:1.3;}
+.hidden{display:none !important;}
+#toolView{
+  background:var(--glass-bg); backdrop-filter:blur(18px); -webkit-backdrop-filter:blur(18px);
+  border:1px solid var(--glass-border); border-radius:16px; padding:18px; box-shadow:0 8px 32px rgba(0,0,0,0.10);
+  animation:popIn .3s cubic-bezier(.22,.9,.32,1);
+}
+.tool-header{display:flex; align-items:center; gap:10px; margin-bottom:14px;}
+.back-btn{
+  border:1px solid var(--glass-border); background:var(--glass-bg2); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); color:var(--text); border-radius:10px;
+  width:34px; height:34px; font-size:16px; cursor:pointer; flex-shrink:0;
+}
+.tool-header h2{font-size:17px; margin:0;}
+textarea, input[type=text], input[type=number], select{
+  width:100%; padding:10px 12px; border-radius:10px; border:1px solid var(--glass-border);
+  background:var(--glass-bg2); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); color:var(--text); font-size:14px; font-family:inherit; outline:none;
+}
+textarea{min-height:110px; font-family:ui-monospace,Menlo,Consolas,monospace; font-size:13px; resize:vertical;}
+label{font-size:12px; color:var(--muted); display:block; margin:10px 0 4px;}
+.row{display:flex; gap:8px; flex-wrap:wrap; margin-top:12px;}
+button.btn{
+  background:var(--accent); color:#fff; border:none; border-radius:10px;
+  padding:10px 16px; font-size:14px; font-weight:600; cursor:pointer; transition:transform .1s ease, box-shadow .2s ease;
+}
+button.btn:active, button.btn.secondary:active, .theme-btn:active, .back-btn:active{ transform:scale(0.94); }
+button.btn:hover{ box-shadow:0 4px 14px rgba(109,94,252,0.35); }
+button.btn.secondary{background:var(--glass-bg2); color:var(--text); border:1px solid var(--glass-border); transition:transform .1s ease;}
+.output{
+  margin-top:12px; padding:10px 12px; background:var(--surface2); border-radius:10px;
+  font-family:ui-monospace,Menlo,Consolas,monospace; font-size:13px; white-space:pre-wrap; word-break:break-all;
+  border:1px solid var(--border); min-height:20px; animation:fadeSlideUp .3s ease backwards;
+}
+.err{color:var(--danger); font-size:13px; margin-top:8px;}
+@keyframes fadeSlideUp{ from{opacity:0; transform:translateY(14px);} to{opacity:1; transform:translateY(0);} }
+@keyframes popIn{ from{opacity:0; transform:scale(0.94) translateY(8px);} to{opacity:1; transform:scale(1) translateY(0);} }
+@keyframes spinIcon{ from{transform:rotate(0deg);} to{transform:rotate(360deg);} }
+.theme-btn.spinning{ animation:spinIcon .5s ease; }
+@media (prefers-reduced-motion: reduce){ *{ animation:none !important; transition:none !important; } }
+.stat-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-top:10px;}
+.stat{background:var(--surface2); border-radius:10px; padding:10px; text-align:center; border:1px solid var(--border);}
+.stat b{display:block; font-size:18px;}
+.stat span{font-size:11px; color:var(--muted);}
+.calc-display{font-size:28px; text-align:right; padding:14px; background:var(--surface2); border-radius:10px; margin-bottom:10px; min-height:40px; overflow-x:auto; border:1px solid var(--border);}
+.calc-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:8px;}
+.calc-grid button{padding:16px 0; font-size:17px; border-radius:10px; border:1px solid var(--border); background:var(--surface2); color:var(--text); cursor:pointer;}
+.calc-grid button.op{background:var(--accent); color:#fff; border:none;}
+.swatch{width:100%; height:60px; border-radius:10px; border:1px solid var(--border); margin-top:10px;}
+.timer-display{font-size:40px; text-align:center; margin:14px 0; font-variant-numeric:tabular-nums;}
+footer{text-align:center; color:var(--muted); font-size:11px; padding:20px 16px 30px;}
+</style>
+</head>
+<body>
+<header>
+  <div><div class="logo">DEV<span>NEX</span></div><div class="tagline">Everything You Need. One Workspace.</div></div>
+  <div class="spacer"></div>
+  <button class="theme-btn" id="themeToggle">🌓 Theme</button>
+</header>
+
+<div class="search-wrap">
+  <input id="search" type="text" placeholder="Search tools…">
+</div>
+
+<main>
+  <div id="dashboard"></div>
+  <div id="toolView" class="hidden"></div>
+</main>
+
+<footer>DEVNEX Phase 1 · Offline-first · No data leaves your device</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/128/three.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/4.3.0/marked.min.js"></script>
+<script>
+const TOOLS = [
+  {id:'json', cat:'Developer', icon:'{ }', name:'JSON Formatter'},
+  {id:'base64', cat:'Developer', icon:'⇄', name:'Base64 Encode/Decode'},
+  {id:'urlenc', cat:'Developer', icon:'🔗', name:'URL Encode/Decode'},
+  {id:'uuid', cat:'Developer', icon:'#', name:'UUID Generator'},
+  {id:'password', cat:'Developer', icon:'🔒', name:'Password Generator'},
+  {id:'timestamp', cat:'Developer', icon:'⏱', name:'Unix Timestamp Converter'},
+  {id:'color', cat:'Developer', icon:'🎨', name:'Color Converter'},
+  {id:'wordcount', cat:'Text', icon:'📝', name:'Word/Char Counter'},
+  {id:'case', cat:'Text', icon:'Aa', name:'Case Converter'},
+  {id:'calc', cat:'General', icon:'🧮', name:'Calculator'},
+  {id:'unit', cat:'General', icon:'📏', name:'Unit Converter'},
+  {id:'stopwatch', cat:'General', icon:'⏳', name:'Stopwatch'},
+  {id:'random', cat:'General', icon:'🎲', name:'Random Number'},
+  {id:'lorem', cat:'Text', icon:'📜', name:'Lorem Ipsum Generator'},
+  {id:'duplines', cat:'Text', icon:'🧹', name:'Duplicate Line Remover'},
+  {id:'findreplace', cat:'Text', icon:'🔍', name:'Find and Replace'},
+  {id:'textcompare', cat:'Text', icon:'⚖️', name:'Text Comparator'},
+  {id:'regex', cat:'Developer', icon:'.*', name:'Regex Tester'},
+  {id:'htmlentity', cat:'Developer', icon:'&amp;', name:'HTML Entity Encoder'},
+  {id:'jwt', cat:'Developer', icon:'🪪', name:'JWT Decoder'},
+  {id:'percent', cat:'General', icon:'%', name:'Percentage Calculator'},
+  {id:'datecalc', cat:'General', icon:'📅', name:'Date Calculator'},
+  {id:'countdown', cat:'General', icon:'⏲', name:'Countdown Timer'},
+  {id:'worldclock', cat:'General', icon:'🌍', name:'World Clock'},
+  {id:'notes', cat:'Text', icon:'🗒', name:'Notes Manager'},
+  {id:'hash', cat:'Developer', icon:'#️⃣', name:'Hash Generator'},
+  {id:'numbase', cat:'Developer', icon:'10₂', name:'Number Base Converter'},
+  {id:'csv2json', cat:'Developer', icon:'📊', name:'CSV to JSON'},
+  {id:'slug', cat:'Developer', icon:'🔗', name:'Slug Generator'},
+  {id:'texttobinary', cat:'Developer', icon:'01', name:'Text ⇄ Binary'},
+  {id:'devicecheck', cat:'Security', icon:'🛡️', name:'Browser & Device Info Check'},
+  {id:'suraksha', cat:'Security', icon:'📋', name:'Phone Suraksha Guide'},
+  {id:'linkcheck', cat:'Security', icon:'⚠️', name:'Suspicious Link Checker'},
+  {id:'display', cat:'PhoneDoctor', icon:'🖥️', name:'Display Test (Dead Pixel)'},
+  {id:'touchtest', cat:'PhoneDoctor', icon:'👆', name:'Touch Screen Test'},
+  {id:'speakertest', cat:'PhoneDoctor', icon:'🔊', name:'Speaker Test'},
+  {id:'mictest', cat:'PhoneDoctor', icon:'🎤', name:'Microphone Test'},
+  {id:'vibrationtest', cat:'PhoneDoctor', icon:'📳', name:'Vibration Test'},
+  {id:'camtest', cat:'PhoneDoctor', icon:'📷', name:'Camera Test'},
+  {id:'batteryinfo', cat:'PhoneDoctor', icon:'🔋', name:'Battery Info'},
+  {id:'heartrate', cat:'Health', icon:'❤️', name:'Heart Rate Estimator'},
+  {id:'bmi', cat:'Health', icon:'⚖️', name:'BMI Calculator'},
+  {id:'waterintake', cat:'Health', icon:'💧', name:'Water Intake Tracker'},
+  {id:'routine', cat:'Productivity', icon:'⏰', name:'Routine Reminder (To-Do)'},
+  {id:'docscan', cat:'Productivity', icon:'📄', name:'Document Scanner'},
+  {id:'notepad', cat:'Productivity', icon:'📓', name:'Notepad'},
+  {id:'codestudio', cat:'CodeStudio', icon:'🧑‍💻', name:'Code Editor & Projects'},
+  {id:'apitester', cat:'CodeStudio', icon:'📡', name:'API Testing Studio'},
+  {id:'markdown', cat:'Productivity', icon:'📝', name:'Documentation Studio (Markdown)'},
+  {id:'backup', cat:'Productivity', icon:'💾', name:'Backup & Restore All Data'},
+  {id:'viewer3d', cat:'Design', icon:'🧩', name:'3D Model Viewer (OBJ)'},
+  {id:'logomaker', cat:'Design', icon:'🎨', name:'Logo & Icon Maker'},
+  {id:'photoeditor', cat:'Design', icon:'🖼️', name:'Photo Editor'},
+  {id:'dbmanager', cat:'CodeStudio', icon:'🗄️', name:'Database Manager'},
+  {id:'photopuzzle', cat:'Games', icon:'🧩', name:'Photo Puzzle (Jigsaw)'},
+  {id:'currency', cat:'General', icon:'💱', name:'Currency Converter'},
+  {id:'agecalc', cat:'General', icon:'🎂', name:'Age Calculator'},
+  {id:'emicalc', cat:'General', icon:'🏦', name:'EMI / Loan Calculator'},
+  {id:'gstcalc', cat:'General', icon:'🧾', name:'GST Calculator'},
+  {id:'tipcalc', cat:'General', icon:'🍽️', name:'Tip / Bill Split Calculator'},
+  {id:'flashlight', cat:'General', icon:'🔦', name:'Flashlight'},
+  {id:'compass', cat:'General', icon:'🧭', name:'Compass'},
+  {id:'ruler', cat:'General', icon:'📏', name:'Screen Ruler (Approx)'},
+  {id:'qrgen', cat:'Developer', icon:'▦', name:'QR Code Generator'},
+  {id:'gradientgen', cat:'Developer', icon:'🌈', name:'CSS Gradient Generator'},
+  {id:'imgmeta', cat:'Design', icon:'📷', name:'Image Metadata Viewer'},
+  {id:'aspectratio', cat:'Design', icon:'📏', name:'Aspect Ratio Calculator'},
+  {id:'filesizeconv', cat:'General', icon:'💾', name:'File Size Converter'},
+];
+
+const CATEGORY_LABELS = {Developer:'Developer Studio', Security:'Security & Info', PhoneDoctor:'Phone Doctor 🩺', Health:'Health & Wellness (Reference Only)', Productivity:'Productivity Tools', CodeStudio:'Code Studio 💻', Design:'Design & Media Studio', Games:'Games & Fun 🧩'};
+function groupByCat(list){
+  const m = {};
+  list.forEach(t=>{ (m[t.cat]=m[t.cat]||[]).push(t); });
+  return m;
+}
+
+function renderDashboard(filter=''){
+  const dash = document.getElementById('dashboard');
+  const f = filter.trim().toLowerCase();
+  const filtered = TOOLS.filter(t=>t.name.toLowerCase().includes(f));
+  const groups = groupByCat(filtered);
+  dash.innerHTML = '';
+  let idx = 0;
+  Object.keys(groups).forEach(cat=>{
+    const h = document.createElement('div');
+    h.className='cat-title'; h.textContent=CATEGORY_LABELS[cat]||cat;
+    dash.appendChild(h);
+    const grid = document.createElement('div');
+    grid.className='grid';
+    groups[cat].forEach(t=>{
+      const c = document.createElement('button');
+      c.className='card';
+      c.style.animationDelay = (idx*0.025)+'s';
+      idx++;
+      c.innerHTML = `<span class="icon">${t.icon}</span><span class="name">${t.name}</span>`;
+      c.onclick = ()=>openTool(t.id);
+      grid.appendChild(c);
+    });
+    dash.appendChild(grid);
+  });
+  if(filtered.length===0){
+    dash.innerHTML = '<p style="color:var(--muted);text-align:center;margin-top:30px;">No tools match your search.</p>';
+  }
+}
+
+document.getElementById('search').addEventListener('input', e=>renderDashboard(e.target.value));
+
+function openTool(id){
+  document.getElementById('dashboard').classList.add('hidden');
+  const view = document.getElementById('toolView');
+  view.classList.remove('hidden');
+  const tool = TOOLS.find(t=>t.id===id);
+  view.innerHTML = `<div class="tool-header"><button class="back-btn" onclick="closeTool()">←</button><h2>${tool.name}</h2></div><div id="toolBody"></div>`;
+  TOOL_RENDER[id]();
+}
+function closeTool(){
+  document.getElementById('toolView').classList.add('hidden');
+  document.getElementById('dashboard').classList.remove('hidden');
+  if(window.__timerInterval) clearInterval(window.__timerInterval);
+}
+
+const TOOL_RENDER = {
+  json(){
+    const b = document.getElementById('toolBody');
+    b.innerHTML = `<label>Paste JSON</label><textarea id="jsonIn" placeholder='{"a":1,"b":[2,3]}'></textarea>
+      <div class="row"><button class="btn" id="fmtBtn">Format &amp; Validate</button><button class="btn secondary" id="minBtn">Minify</button></div>
+      <div id="jsonErr" class="err"></div><div id="jsonOut" class="output"></div>`;
+    document.getElementById('fmtBtn').onclick = ()=>{
+      try{ const v = JSON.parse(document.getElementById('jsonIn').value);
+        document.getElementById('jsonOut').textContent = JSON.stringify(v,null,2);
+        document.getElementById('jsonErr').textContent='';
+      }catch(e){ document.getElementById('jsonErr').textContent='Invalid JSON: '+e.message; document.getElementById('jsonOut').textContent=''; }
+    };
+    document.getElementById('minBtn').onclick = ()=>{
+      try{ const v = JSON.parse(document.getElementById('jsonIn').value);
+        document.getElementById('jsonOut').textContent = JSON.stringify(v);
+        document.getElementById('jsonErr').textContent='';
+      }catch(e){ document.getElementById('jsonErr').textContent='Invalid JSON: '+e.message; document.getElementById('jsonOut').textContent=''; }
+    };
+  },
+  base64(){
+    const b = document.getElementById('toolBody');
+    b.innerHTML = `<label>Input</label><textarea id="b64In"></textarea>
+      <div class="row"><button class="btn" id="encBtn">Encode</button><button class="btn secondary" id="decBtn">Decode</button></div>
+      <div id="b64Err" class="err"></div><div id="b64Out" class="output"></div>`;
+    document.getElementById('encBtn').onclick=()=>{
+      try{ document.getElementById('b64Out').textContent = btoa(unescape(encodeURIComponent(document.getElementById('b64In').value))); document.getElementById('b64Err').textContent=''; }
+      catch(e){ document.getElementById('b64Err').textContent='Encode failed: '+e.message; }
+    };
+    document.getElementById('decBtn').onclick=()=>{
+      try{ document.getElementById('b64Out').textContent = decodeURIComponent(escape(atob(document.getElementById('b64In').value))); document.getElementById('b64Err').textContent=''; }
+      catch(e){ document.getElementById('b64Err').textContent='Invalid Base64 input'; document.getElementById('b64Out').textContent=''; }
+    };
+  },
+  urlenc(){
+    const b = document.getElementById('toolBody');
+    b.innerHTML = `<label>Input</label><textarea id="urlIn"></textarea>
+      <div class="row"><button class="btn" id="uencBtn">Encode</button><button class="btn secondary" id="udecBtn">Decode</button></div>
+      <div id="urlErr" class="err"></div><div id="urlOut" class="output"></div>`;
+    document.getElementById('uencBtn').onclick=()=>{ document.getElementById('urlOut').textContent = encodeURIComponent(document.getElementById('urlIn').value); document.getElementById('urlErr').textContent=''; };
+    document.getElementById('udecBtn').onclick=()=>{
+      try{ document.getElementById('urlOut').textContent = decodeURIComponent(document.getElementById('urlIn').value); document.getElementById('urlErr').textContent=''; }
+      catch(e){ document.getElementById('urlErr').textContent='Invalid encoded input'; }
+    };
+  },
+  uuid(){
+    const b = document.getElementById('toolBody');
+    b.innerHTML = `<div class="row"><button class="btn" id="genBtn">Generate UUID v4</button><button class="btn secondary" id="copyUuid">Copy</button></div><div id="uuidOut" class="output"></div>`;
+    const gen = ()=>{
+      const u = crypto.randomUUID ? crypto.randomUUID() : 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,c=>{const r=Math.random()*16|0; return (c=='x'?r:(r&0x3|0x8)).toString(16);});
+      document.getElementById('uuidOut').textContent = u;
+    };
+    gen();
+    document.getElementById('genBtn').onclick = gen;
+    document.getElementById('copyUuid').onclick = ()=>navigator.clipboard?.writeText(document.getElementById('uuidOut').textContent);
+  },
+  password(){
+    const b = document.getElementById('toolBody');
+    b.innerHTML = `<label>Length: <span id="lenVal">16</span></label><input type="range" id="lenRange" min="6" max="64" value="16" style="width:100%;">
+      <label><input type="checkbox" id="symChk" checked> Include symbols</label>
+      <label><input type="checkbox" id="numChk" checked> Include numbers</label>
+      <div class="row"><button class="btn" id="genPwBtn">Generate</button></div>
+      <div id="pwOut" class="output"></div>`;
+    document.getElementById('lenRange').oninput = e=>document.getElementById('lenVal').textContent=e.target.value;
+    document.getElementById('genPwBtn').onclick = ()=>{
+      const len = +document.getElementById('lenRange').value;
+      let chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';
+      if(document.getElementById('numChk').checked) chars += '23456789';
+      if(document.getElementById('symChk').checked) chars += '!@#$%^&*-_=+';
+      let out='';
+      const arr = new Uint32Array(len); crypto.getRandomValues(arr);
+      for(let i=0;i<len;i++) out += chars[arr[i]%chars.length];
+      document.getElementById('pwOut').textContent = out;
+    };
+  },
+  timestamp(){
+    const b = document.getElementById('toolBody');
+    b.innerHTML = `<label>Unix Timestamp (seconds)</label><input type="number" id="tsIn" placeholder="e.g. 1735689600">
+      <div class="row"><button class="btn" id="tsToDate">Convert to Date</button><button class="btn secondary" id="tsNow">Use Now</button></div>
+      <div id="tsOut" class="output"></div>
+      <label style="margin-top:16px;">Date/time (local)</label><input type="datetime-local" id="dateIn">
+      <div class="row"><button class="btn" id="dateToTs">Convert to Timestamp</button></div>
+      <div id="dateOut" class="output"></div>`;
+    document.getElementById('tsToDate').onclick = ()=>{
+      const v = +document.getElementById('tsIn').value;
+      if(isNaN(v)){ document.getElementById('tsOut').textContent='Enter a valid number'; return; }
+      document.getElementById('tsOut').textContent = new Date(v*1000).toString();
+    };
+    document.getElementById('tsNow').onclick = ()=>{ document.getElementById('tsIn').value = Math.floor(Date.now()/1000); };
+    document.getElementById('dateToTs').onclick = ()=>{
+      const v = document.getElementById('dateIn').value;
+      if(!v){ document.getElementById('dateOut').textContent='Pick a date/time'; return; }
+      document.getElementById('dateOut').textContent = Math.floor(new Date(v).getTime()/1000);
+    };
+  },
+  color(){
+    const b = document.getElementById('toolBody');
+    b.innerHTML = `<label>HEX</label><input type="text" id="hexIn" placeholder="#6d5efc">
+      <div class="row"><button class="btn" id="convColor">Convert</button></div>
+      <div id="colorErr" class="err"></div>
+      <div class="output" id="colorOut"></div>
+      <div class="swatch" id="swatch"></div>`;
+    document.getElementById('convColor').onclick = ()=>{
+      let hex = document.getElementById('hexIn').value.trim();
+      if(!/^#?[0-9a-fA-F]{6}$/.test(hex)){ document.getElementById('colorErr').textContent='Enter a valid 6-digit hex color'; document.getElementById('colorOut').textContent=''; document.getElementById('swatch').style.background=''; return; }
+      if(hex[0]!=='#') hex = '#'+hex;
+      const r = parseInt(hex.slice(1,3),16), g = parseInt(hex.slice(3,5),16), bl = parseInt(hex.slice(5,7),16);
+      const max=Math.max(r,g,bl)/255, min=Math.min(r,g,bl)/255;
+      let h=0,s=0,l=(max+min)/2;
+      if(max!==min){ const d=max-min; s=l>0.5?d/(2-max-min):d/(max+min);
+        if(max===r/255) h=((g/255-bl/255)/d+(g<bl?6:0));
+        else if(max===g/255) h=((bl/255-r/255)/d+2);
+        else h=((r/255-g/255)/d+4);
+        h*=60;
+      }
+      document.getElementById('colorOut').textContent = `HEX: ${hex}\nRGB: rgb(${r}, ${g}, ${bl})\nHSL: hsl(${Math.round(h)}, ${Math.round(s*100)}%, ${Math.round(l*100)}%)`;
+      document.getElementById('swatch').style.background = hex;
+      document.getElementById('colorErr').textContent='';
+    };
+  },
+  wordcount(){
+    const b = document.getElementById('toolBody');
+    b.innerHTML = `<label>Text</label><textarea id="wcIn" style="min-height:160px;"></textarea>
+      <div class="stat-grid">
+        <div class="stat"><b id="wcWords">0</b><span>Words</span></div>
+        <div class="stat"><b id="wcChars">0</b><span>Characters</span></div>
+        <div class="stat"><b id="wcLines">0</b><span>Lines</span></div>
+      </div>`;
+    document.getElementById('wcIn').addEventListener('input', e=>{
+      const v = e.target.value;
+      document.getElementById('wcWords').textContent = v.trim()===''?0:v.trim().split(/\s+/).length;
+      document.getElementById('wcChars').textContent = v.length;
+      document.getElementById('wcLines').textContent = v===''?0:v.split('\n').length;
+    });
+  },
+  case(){
+    const b = document.getElementById('toolBody');
+    b.innerHTML = `<label>Text</label><textarea id="caseIn"></textarea>
+      <div class="row">
+        <button class="btn secondary" data-m="upper">UPPERCASE</button>
+        <button class="btn secondary" data-m="lower">lowercase</button>
+        <button class="btn secondary" data-m="title">Title Case</button>
+        <button class="btn secondary" data-m="sentence">Sentence case</button>
+        <button class="btn secondary" data-m="camel">camelCase</button>
+        <button class="btn secondary" data-m="snake">snake_case</button>
+      </div>
+      <div class="output" id="caseOut"></div>`;
+    b.querySelectorAll('[data-m]').forEach(btn=>{
+      btn.onclick = ()=>{
+        const v = document.getElementById('caseIn').value;
+        const m = btn.dataset.m;
+        let out='';
+        if(m==='upper') out=v.toUpperCase();
+        else if(m==='lower') out=v.toLowerCase();
+        else if(m==='title') out=v.replace(/\w\S*/g,t=>t[0].toUpperCase()+t.slice(1).toLowerCase());
+        else if(m==='sentence') out=v.toLowerCase().replace(/(^\s*\w|[.!?]\s*\w)/g,c=>c.toUpperCase());
+        else if(m==='camel') out=v.trim().toLowerCase().replace(/[^a-zA-Z0-9]+(.)/g,(_,c)=>c.toUpperCase());
+        else if(m==='snake') out=v.trim().toLowerCase().replace(/[^a-zA-Z0-9]+/g,'_');
+        document.getElementById('caseOut').textContent = out;
+      };
+    });
+  },
+  calc(){
+    const b = document.getElementById('toolBody');
+    b.innerHTML = `<div class="calc-display" id="calcDisp">0</div>
+      <div class="calc-grid">
+        <button onclick="calcInput('C')">C</button><button onclick="calcInput('⌫')">⌫</button><button onclick="calcInput('%')">%</button><button class="op" onclick="calcInput('/')">÷</button>
+        <button onclick="calcInput('7')">7</button><button onclick="calcInput('8')">8</button><button onclick="calcInput('9')">9</button><button class="op" onclick="calcInput('*')">×</button>
+        <button onclick="calcInput('4')">4</button><button onclick="calcInput('5')">5</button><button onclick="calcInput('6')">6</button><button class="op" onclick="calcInput('-')">−</button>
+        <button onclick="calcInput('1')">1</button><button onclick="calcInput('2')">2</button><button onclick="calcInput('3')">3</button><button class="op" onclick="calcInput('+')">+</button>
+        <button onclick="calcInput('0')">0</button><button onclick="calcInput('.')">.</button><button class="op" onclick="calcInput('=')">=</button>
+      </div>`;
+    window.__calcExpr = '';
+  },
+  unit(){
+    const b = document.getElementById('toolBody');
+    b.innerHTML = `<label>Category</label>
+      <select id="unitCat">
+        <option value="length">Length</option>
+        <option value="weight">Weight</option>
+        <option value="temp">Temperature</option>
+      </select>
+      <label>Value</label><input type="number" id="unitVal" value="1">
+      <div class="row">
+        <select id="unitFrom"></select>
+        <select id="unitTo"></select>
+      </div>
+      <div class="row"><button class="btn" id="unitConv">Convert</button></div>
+      <div class="output" id="unitOut"></div>`;
+    const UNITS = {
+      length:{m:1, km:1000, cm:0.01, mm:0.001, mi:1609.34, yd:0.9144, ft:0.3048, in:0.0254},
+      weight:{kg:1, g:0.001, mg:0.000001, lb:0.453592, oz:0.0283495, t:1000}
+    };
+    function fillSelects(){
+      const cat = document.getElementById('unitCat').value;
+      const from = document.getElementById('unitFrom'), to = document.getElementById('unitTo');
+      from.innerHTML=''; to.innerHTML='';
+      if(cat==='temp'){
+        ['C','F','K'].forEach(u=>{ from.innerHTML+=`<option>${u}</option>`; to.innerHTML+=`<option>${u}</option>`; });
+        to.selectedIndex=1;
+      } else {
+        Object.keys(UNITS[cat]).forEach(u=>{ from.innerHTML+=`<option>${u}</option>`; to.innerHTML+=`<option>${u}</option>`; });
+        to.selectedIndex=1;
+      }
+    }
+    document.getElementById('unitCat').onchange = fillSelects;
+    fillSelects();
+    document.getElementById('unitConv').onclick = ()=>{
+      const cat = document.getElementById('unitCat').value;
+      const v = parseFloat(document.getElementById('unitVal').value);
+      const from = document.getElementById('unitFrom').value, to = document.getElementById('unitTo').value;
+      if(isNaN(v)){ document.getElementById('unitOut').textContent='Enter a valid number'; return; }
+      let result;
+      if(cat==='temp'){
+        let c;
+        if(from==='C') c=v; else if(from==='F') c=(v-32)*5/9; else c=v-273.15;
+        if(to==='C') result=c; else if(to==='F') result=c*9/5+32; else result=c+273.15;
+      } else {
+        result = v * UNITS[cat][from] / UNITS[cat][to];
+      }
+      document.getElementById('unitOut').textContent = `${v} ${from} = ${Math.round(result*10000)/10000} ${to}`;
+    };
+  },
+  stopwatch(){
+    const b = document.getElementById('toolBody');
+    b.innerHTML = `<div class="timer-display" id="swDisp">00:00.00</div>
+      <div class="row" style="justify-content:center;">
+        <button class="btn" id="swStart">Start</button>
+        <button class="btn secondary" id="swLap">Lap</button>
+        <button class="btn secondary" id="swReset">Reset</button>
+      </div>
+      <div id="swLaps" style="margin-top:12px;"></div>`;
+    let elapsed=0, running=false, startTs=0, laps=[];
+    function fmt(ms){
+      const m = Math.floor(ms/60000), s=Math.floor((ms%60000)/1000), cs=Math.floor((ms%1000)/10);
+      return `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}.${String(cs).padStart(2,'0')}`;
+    }
+    function tick(){ document.getElementById('swDisp').textContent = fmt(elapsed + (running? Date.now()-startTs : 0)); }
+    window.__timerInterval = setInterval(tick, 30);
+    document.getElementById('swStart').onclick = (e)=>{
+      if(!running){ running=true; startTs=Date.now(); e.target.textContent='Pause'; }
+      else { running=false; elapsed += Date.now()-startTs; e.target.textContent='Start'; }
+    };
+    document.getElementById('swLap').onclick = ()=>{
+      laps.push(fmt(elapsed + (running? Date.now()-startTs : 0)));
+      document.getElementById('swLaps').innerHTML = laps.map((l,i)=>`<div class="output" style="margin-top:4px;">Lap ${i+1}: ${l}</div>`).join('');
+    };
+    document.getElementById('swReset').onclick = ()=>{
+      running=false; elapsed=0; laps=[]; document.getElementById('swDisp').textContent='00:00.00';
+      document.getElementById('swLaps').innerHTML=''; document.getElementById('swStart').textContent='Start';
+    };
+  },
+  random(){
+    const b = document.getElementById('toolBody');
+    b.innerHTML = `<label>Min</label><input type="number" id="rMin" value="1">
+      <label>Max</label><input type="number" id="rMax" value="100">
+      <div class="row"><button class="btn" id="rGen">Generate</button></div>
+      <div class="output" id="rOut"></div>`;
+    document.getElementById('rGen').onclick = ()=>{
+      const min = parseInt(document.getElementById('rMin').value), max = parseInt(document.getElementById('rMax').value);
+      if(isNaN(min)||isNaN(max)||min>max){ document.getElementById('rOut').textContent='Enter valid min ≤ max'; return; }
+      const arr = new Uint32Array(1); crypto.getRandomValues(arr);
+      document.getElementById('rOut').textContent = min + (arr[0] % (max-min+1));
+    };
+  },
+  lorem(){
+    const b = document.getElementById('toolBody');
+    const WORDS = ('lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua enim ad minim veniam quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat duis aute irure in reprehenderit voluptate velit esse cillum eu fugiat nulla pariatur excepteur sint occaecat cupidatat non proident sunt culpa qui officia deserunt mollit anim id est laborum').split(' ');
+    b.innerHTML = `<label>Paragraphs</label><input type="number" id="loremN" value="3" min="1" max="20">
+      <div class="row"><button class="btn" id="loremGen">Generate</button><button class="btn secondary" id="loremCopy">Copy</button></div>
+      <div class="output" id="loremOut"></div>`;
+    function para(){
+      const len = 40 + Math.floor(Math.random()*30);
+      let words=[]; for(let i=0;i<len;i++) words.push(WORDS[Math.floor(Math.random()*WORDS.length)]);
+      let s = words.join(' '); s = s[0].toUpperCase()+s.slice(1)+'.';
+      return s;
+    }
+    document.getElementById('loremGen').onclick = ()=>{
+      const n = Math.max(1, Math.min(20, +document.getElementById('loremN').value||1));
+      const out=[]; for(let i=0;i<n;i++) out.push(para());
+      document.getElementById('loremOut').textContent = out.join('\n\n');
+    };
+    document.getElementById('loremCopy').onclick = ()=>navigator.clipboard?.writeText(document.getElementById('loremOut').textContent);
+  },
+  duplines(){
+    const b = document.getElementById('toolBody');
+    b.innerHTML = `<label>Text (one item per line)</label><textarea id="dupIn" style="min-height:150px;"></textarea>
+      <div class="row"><button class="btn" id="dupBtn">Remove Duplicates</button></div>
+      <div class="output" id="dupOut"></div>`;
+    document.getElementById('dupBtn').onclick = ()=>{
+      const lines = document.getElementById('dupIn').value.split('\n');
+      const seen = new Set(); const out=[];
+      lines.forEach(l=>{ if(!seen.has(l)){ seen.add(l); out.push(l); } });
+      document.getElementById('dupOut').textContent = out.join('\n');
+    };
+  },
+  findreplace(){
+    const b = document.getElementById('toolBody');
+    b.innerHTML = `<label>Text</label><textarea id="frIn" style="min-height:120px;"></textarea>
+      <label>Find</label><input type="text" id="frFind">
+      <label>Replace with</label><input type="text" id="frRep">
+      <label><input type="checkbox" id="frCase"> Match case</label>
+      <div class="row"><button class="btn" id="frBtn">Replace All</button></div>
+      <div class="output" id="frOut"></div>`;
+    document.getElementById('frBtn').onclick = ()=>{
+      const text = document.getElementById('frIn').value;
+      const find = document.getElementById('frFind').value;
+      const rep = document.getElementById('frRep').value;
+      if(!find){ document.getElementById('frOut').textContent = text; return; }
+      const flags = document.getElementById('frCase').checked ? 'g' : 'gi';
+      const esc = find.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
+      document.getElementById('frOut').textContent = text.replace(new RegExp(esc, flags), rep);
+    };
+  },
+  textcompare(){
+    const b = document.getElementById('toolBody');
+    b.innerHTML = `<label>Text A</label><textarea id="cmpA" style="min-height:100px;"></textarea>
+      <label>Text B</label><textarea id="cmpB" style="min-height:100px;"></textarea>
+      <div class="row"><button class="btn" id="cmpBtn">Compare</button></div>
+      <div class="output" id="cmpOut"></div>`;
+    document.getElementById('cmpBtn').onclick = ()=>{
+      const a = document.getElementById('cmpA').value.split('\n');
+      const bL = document.getElementById('cmpB').value.split('\n');
+      const max = Math.max(a.length,bL.length); let out=[];
+      for(let i=0;i<max;i++){
+        const la=a[i], lb=bL[i];
+        if(la===lb) out.push('  '+(la??''));
+        else { if(la!==undefined) out.push('- '+la); if(lb!==undefined) out.push('+ '+lb); }
+      }
+      document.getElementById('cmpOut').textContent = out.join('\n');
+    };
+  },
+  regex(){
+    const b = document.getElementById('toolBody');
+    b.innerHTML = `<label>Pattern</label><input type="text" id="rePat" placeholder="\\d+">
+      <label>Flags</label><input type="text" id="reFlags" value="g">
+      <label>Test string</label><textarea id="reStr" style="min-height:100px;"></textarea>
+      <div class="row"><button class="btn" id="reBtn">Test</button></div>
+      <div id="reErr" class="err"></div><div class="output" id="reOut"></div>`;
+    document.getElementById('reBtn').onclick = ()=>{
+      try{
+        const re = new RegExp(document.getElementById('rePat').value, document.getElementById('reFlags').value);
+        const str = document.getElementById('reStr').value;
+        const matches = [...str.matchAll(re)];
+        document.getElementById('reErr').textContent='';
+        document.getElementById('reOut').textContent = matches.length ? matches.map((m,i)=>`Match ${i+1}: "${m[0]}" at index ${m.index}`).join('\n') : 'No matches found';
+      }catch(e){ document.getElementById('reErr').textContent = 'Invalid regex: '+e.message; document.getElementById('reOut').textContent=''; }
+    };
+  },
+  htmlentity(){
+    const b = document.getElementById('toolBody');
+    b.innerHTML = `<label>Input</label><textarea id="heIn" style="min-height:120px;"></textarea>
+      <div class="row"><button class="btn" id="heEnc">Encode</button><button class="btn secondary" id="heDec">Decode</button></div>
+      <div class="output" id="heOut"></div>`;
+    document.getElementById('heEnc').onclick = ()=>{
+      const div = document.createElement('div');
+      div.textContent = document.getElementById('heIn').value;
+      document.getElementById('heOut').textContent = div.innerHTML;
+    };
+    document.getElementById('heDec').onclick = ()=>{
+      const div = document.createElement('div');
+      div.innerHTML = document.getElementById('heIn').value;
+      document.getElementById('heOut').textContent = div.textContent;
+    };
+  },
+  jwt(){
+    const b = document.getElementById('toolBody');
+    b.innerHTML = `<label>JWT</label><textarea id="jwtIn" style="min-height:100px;" placeholder="eyJhbGciOi..."></textarea>
+      <div class="row"><button class="btn" id="jwtBtn">Decode</button></div>
+      <div id="jwtErr" class="err"></div>
+      <label>Header</label><div class="output" id="jwtHeader"></div>
+      <label>Payload</label><div class="output" id="jwtPayload"></div>`;
+    function b64urlDecode(s){ s = s.replace(/-/g,'+').replace(/_/g,'/'); while(s.length%4) s+='='; return decodeURIComponent(escape(atob(s))); }
+    document.getElementById('jwtBtn').onclick = ()=>{
+      const parts = document.getElementById('jwtIn').value.trim().split('.');
+      if(parts.length < 2){ document.getElementById('jwtErr').textContent='Not a valid JWT (expected header.payload.signature)'; return; }
+      try{
+        document.getElementById('jwtHeader').textContent = JSON.stringify(JSON.parse(b64urlDecode(parts[0])), null, 2);
+        document.getElementById('jwtPayload').textContent = JSON.stringify(JSON.parse(b64urlDecode(parts[1])), null, 2);
+        document.getElementById('jwtErr').textContent = 'Note: signature is not verified, this only decodes the token.';
+      }catch(e){ document.getElementById('jwtErr').textContent = 'Could not decode: '+e.message; }
+    };
+  },
+  percent(){
+    const b = document.getElementById('toolBody');
+    b.innerHTML = `<label>X% of Y</label>
+      <div class="row"><input type="number" id="pX" placeholder="X" style="flex:1;"><input type="number" id="pY" placeholder="Y" style="flex:1;"></div>
+      <div class="row"><button class="btn" id="pBtn1">Calculate</button></div>
+      <div class="output" id="pOut1"></div>
+      <label style="margin-top:16px;">X is what % of Y</label>
+      <div class="row"><input type="number" id="pX2" placeholder="X" style="flex:1;"><input type="number" id="pY2" placeholder="Y" style="flex:1;"></div>
+      <div class="row"><button class="btn" id="pBtn2">Calculate</button></div>
+      <div class="output" id="pOut2"></div>`;
+    document.getElementById('pBtn1').onclick = ()=>{
+      const x=+document.getElementById('pX').value, y=+document.getElementById('pY').value;
+      document.getElementById('pOut1').textContent = isNaN(x)||isNaN(y) ? 'Enter valid numbers' : `${x}% of ${y} = ${(x/100*y)}`;
+    };
+    document.getElementById('pBtn2').onclick = ()=>{
+      const x=+document.getElementById('pX2').value, y=+document.getElementById('pY2').value;
+      document.getElementById('pOut2').textContent = isNaN(x)||isNaN(y)||y===0 ? 'Enter valid numbers' : `${x} is ${(x/y*100).toFixed(2)}% of ${y}`;
+    };
+  },
+  datecalc(){
+    const b = document.getElementById('toolBody');
+    b.innerHTML = `<label>Start date</label><input type="date" id="dcStart">
+      <label>End date</label><input type="date" id="dcEnd">
+      <div class="row"><button class="btn" id="dcBtn">Calculate Difference</button></div>
+      <div class="output" id="dcOut"></div>`;
+    document.getElementById('dcBtn').onclick = ()=>{
+      const s = document.getElementById('dcStart').value, e = document.getElementById('dcEnd').value;
+      if(!s||!e){ document.getElementById('dcOut').textContent='Pick both dates'; return; }
+      const diff = Math.round((new Date(e)-new Date(s))/86400000);
+      document.getElementById('dcOut').textContent = `${Math.abs(diff)} days (${diff>=0?'end is after start':'end is before start'})`;
+    };
+  },
+  countdown(){
+    const b = document.getElementById('toolBody');
+    b.innerHTML = `<label>Minutes</label><input type="number" id="cdMin" value="5">
+      <label>Seconds</label><input type="number" id="cdSec" value="0">
+      <div class="timer-display" id="cdDisp">05:00</div>
+      <div class="row" style="justify-content:center;"><button class="btn" id="cdStart">Start</button><button class="btn secondary" id="cdReset">Reset</button></div>`;
+    let remaining=0, running=false;
+    function fmt(s){ const m=Math.floor(s/60), r=s%60; return `${String(m).padStart(2,'0')}:${String(r).padStart(2,'0')}`; }
+    window.__timerInterval = setInterval(()=>{
+      if(running){ remaining--; document.getElementById('cdDisp').textContent = fmt(Math.max(0,remaining));
+        if(remaining<=0){ running=false; document.getElementById('cdStart').textContent='Start'; document.getElementById('cdDisp').textContent='Time up!'; } }
+    }, 1000);
+    document.getElementById('cdStart').onclick = (ev)=>{
+      if(!running){ if(remaining<=0) remaining = (+document.getElementById('cdMin').value||0)*60 + (+document.getElementById('cdSec').value||0);
+        running=true; ev.target.textContent='Pause'; }
+      else { running=false; ev.target.textContent='Start'; }
+    };
+    document.getElementById('cdReset').onclick = ()=>{ running=false; remaining=0; document.getElementById('cdStart').textContent='Start'; document.getElementById('cdDisp').textContent = fmt((+document.getElementById('cdMin').value||0)*60 + (+document.getElementById('cdSec').value||0)); };
+  },
+  worldclock(){
+    const b = document.getElementById('toolBody');
+    const ZONES = [['New York','America/New_York'],['London','Europe/London'],['Dubai','Asia/Dubai'],['Mumbai','Asia/Kolkata'],['Tokyo','Asia/Tokyo'],['Sydney','Australia/Sydney']];
+    b.innerHTML = '<div id="wcList"></div>';
+    function render(){
+      document.getElementById('wcList').innerHTML = ZONES.map(([name,tz])=>{
+        const t = new Intl.DateTimeFormat('en-US',{timeZone:tz, hour:'2-digit', minute:'2-digit', second:'2-digit', hour12:true, weekday:'short'}).format(new Date());
+        return `<div class="output" style="margin-top:8px;"><b>${name}</b><br>${t}</div>`;
+      }).join('');
+    }
+    render();
+    window.__timerInterval = setInterval(render, 1000);
+  },
+  notes(){
+    const b = document.getElementById('toolBody');
+    b.innerHTML = `<label>New note</label><textarea id="noteIn" style="min-height:80px;"></textarea>
+      <div class="row"><button class="btn" id="noteSave">Save Note</button></div>
+      <div id="noteList" style="margin-top:14px;"></div>`;
+    function load(){ try{ return JSON.parse(localStorage.getItem('devnex-notes')||'[]'); }catch(e){ return []; } }
+    function save(notes){ try{ localStorage.setItem('devnex-notes', JSON.stringify(notes)); }catch(e){} }
+    function render(){
+      const notes = load();
+      document.getElementById('noteList').innerHTML = notes.length ? notes.map((n,i)=>`<div class="output" style="margin-top:8px; display:flex; justify-content:space-between; gap:8px;"><span style="white-space:pre-wrap;">${n}</span><button class="btn secondary" style="padding:4px 10px;" data-idx="${i}">Delete</button></div>`).join('') : '<p style="color:var(--muted);">No notes yet.</p>';
+      document.querySelectorAll('#noteList [data-idx]').forEach(btn=>{
+        btn.onclick = ()=>{ const ns = load(); ns.splice(+btn.dataset.idx,1); save(ns); render(); };
+      });
+    }
+    document.getElementById('noteSave').onclick = ()=>{
+      const v = document.getElementById('noteIn').value.trim();
+      if(!v) return;
+      const notes = load(); notes.unshift(v); save(notes);
+      document.getElementById('noteIn').value=''; render();
+    };
+    render();
+  },
+  hash(){
+    const b = document.getElementById('toolBody');
+    b.innerHTML = `<label>Text</label><textarea id="hashIn" style="min-height:100px;"></textarea>
+      <label>Algorithm</label><select id="hashAlgo"><option value="SHA-256">SHA-256</option><option value="SHA-1">SHA-1</option><option value="SHA-512">SHA-512</option></select>
+      <div class="row"><button class="btn" id="hashBtn">Generate Hash</button></div>
+      <div class="output" id="hashOut"></div>`;
+    document.getElementById('hashBtn').onclick = async ()=>{
+      const data = new TextEncoder().encode(document.getElementById('hashIn').value);
+      const algo = document.getElementById('hashAlgo').value;
+      const buf = await crypto.subtle.digest(algo, data);
+      const hex = [...new Uint8Array(buf)].map(x=>x.toString(16).padStart(2,'0')).join('');
+      document.getElementById('hashOut').textContent = hex;
+    };
+  },
+  numbase(){
+    const b = document.getElementById('toolBody');
+    b.innerHTML = `<label>Value</label><input type="text" id="nbVal" placeholder="e.g. 255">
+      <label>From base</label><select id="nbFrom"><option value="10">Decimal</option><option value="2">Binary</option><option value="8">Octal</option><option value="16">Hex</option></select>
+      <div class="row"><button class="btn" id="nbBtn">Convert</button></div>
+      <div id="nbErr" class="err"></div><div class="output" id="nbOut"></div>`;
+    document.getElementById('nbBtn').onclick = ()=>{
+      const from = +document.getElementById('nbFrom').value;
+      const val = document.getElementById('nbVal').value.trim();
+      const n = parseInt(val, from);
+      if(isNaN(n)){ document.getElementById('nbErr').textContent='Invalid number for that base'; document.getElementById('nbOut').textContent=''; return; }
+      document.getElementById('nbErr').textContent='';
+      document.getElementById('nbOut').textContent = `Decimal: ${n}\nBinary: ${n.toString(2)}\nOctal: ${n.toString(8)}\nHex: ${n.toString(16).toUpperCase()}`;
+    };
+  },
+  csv2json(){
+    const b = document.getElementById('toolBody');
+    b.innerHTML = `<label>CSV (first row = headers)</label><textarea id="csvIn" style="min-height:120px;" placeholder="name,age\nJohn,30"></textarea>
+      <div class="row"><button class="btn" id="csvBtn">Convert</button></div>
+      <div class="output" id="csvOut"></div>`;
+    document.getElementById('csvBtn').onclick = ()=>{
+      const lines = document.getElementById('csvIn').value.trim().split('\n').filter(l=>l.length);
+      if(lines.length<2){ document.getElementById('csvOut').textContent='Need a header row plus at least one data row'; return; }
+      const headers = lines[0].split(',').map(h=>h.trim());
+      const out = lines.slice(1).map(line=>{
+        const vals = line.split(',');
+        const obj = {}; headers.forEach((h,i)=>obj[h]=(vals[i]||'').trim());
+        return obj;
+      });
+      document.getElementById('csvOut').textContent = JSON.stringify(out, null, 2);
+    };
+  },
+  slug(){
+    const b = document.getElementById('toolBody');
+    b.innerHTML = `<label>Text</label><input type="text" id="slugIn" placeholder="My Blog Post Title!">
+      <div class="row"><button class="btn" id="slugBtn">Generate Slug</button></div>
+      <div class="output" id="slugOut"></div>`;
+    document.getElementById('slugBtn').onclick = ()=>{
+      const s = document.getElementById('slugIn').value.trim().toLowerCase()
+        .replace(/[^a-z0-9\s-]/g,'').replace(/\s+/g,'-').replace(/-+/g,'-').replace(/^-|-$/g,'');
+      document.getElementById('slugOut').textContent = s;
+    };
+  },
+  texttobinary(){
+    const b = document.getElementById('toolBody');
+    b.innerHTML = `<label>Input</label><textarea id="tbIn" style="min-height:100px;"></textarea>
+      <div class="row"><button class="btn" id="tbEnc">Text → Binary</button><button class="btn secondary" id="tbDec">Binary → Text</button></div>
+      <div id="tbErr" class="err"></div><div class="output" id="tbOut"></div>`;
+    document.getElementById('tbEnc').onclick = ()=>{
+      const v = document.getElementById('tbIn').value;
+      document.getElementById('tbOut').textContent = [...v].map(c=>c.charCodeAt(0).toString(2).padStart(8,'0')).join(' ');
+      document.getElementById('tbErr').textContent='';
+    };
+    document.getElementById('tbDec').onclick = ()=>{
+      try{
+        const v = document.getElementById('tbIn').value.trim().split(/\s+/);
+        document.getElementById('tbOut').textContent = v.map(b2=>String.fromCharCode(parseInt(b2,2))).join('');
+        document.getElementById('tbErr').textContent='';
+      }catch(e){ document.getElementById('tbErr').textContent='Invalid binary input'; }
+    };
+  },
+  devicecheck(){
+    const b = document.getElementById('toolBody');
+    b.innerHTML = `<p style="color:var(--muted); font-size:13px;">This reads real, browser-visible info only. A web page cannot scan your phone's files or apps for viruses — for real malware protection use your phone's built-in security (e.g. Play Protect) or a dedicated antivirus app.</p>
+      <div class="row"><button class="btn" id="dchkBtn">Run Check</button></div>
+      <div class="output" id="dchkOut"></div>`;
+    document.getElementById('dchkBtn').onclick = async ()=>{
+      const lines = [];
+      lines.push('Online: ' + (navigator.onLine ? 'Yes' : 'No'));
+      lines.push('Secure connection (HTTPS): ' + (location.protocol==='https:' ? 'Yes' : 'No'));
+      lines.push('Cookies enabled: ' + (navigator.cookieEnabled ? 'Yes' : 'No'));
+      lines.push('Do Not Track: ' + (navigator.doNotTrack || 'Not set'));
+      lines.push('Browser: ' + navigator.userAgent);
+      try{
+        if(navigator.storage && navigator.storage.estimate){
+          const est = await navigator.storage.estimate();
+          lines.push(`Storage used: ${(est.usage/1048576).toFixed(1)} MB of ${(est.quota/1048576).toFixed(0)} MB available to this site`);
+        }
+      }catch(e){}
+      try{
+        if(navigator.permissions){
+          for(const p of ['geolocation','camera','microphone','notifications']){
+            try{ const r = await navigator.permissions.query({name:p}); lines.push(`${p} permission: ${r.state}`); }catch(e){}
+          }
+        }
+      }catch(e){}
+      document.getElementById('dchkOut').textContent = lines.join('\n');
+    };
+  },
+  suraksha(){
+    const b = document.getElementById('toolBody');
+    const TIPS = [
+      'Kisi anjaan link ya message (WhatsApp/SMS) pe click na karein, chahe woh bank ya prize ka naam le raha ho',
+      'OTP kisi ko bhi mat batayein — bank ya company kabhi OTP nahi maangti',
+      'Apps hamesha Google Play Store se hi install karein, kisi aur jagah se APK file download karke install na karein',
+      'Settings mein jaake Google Play Protect hamesha ON rakhein',
+      'Kisi app ko permission dene se pehle sochein — ek flashlight app ko contacts ya SMS access ki zaroorat nahi',
+      'Phone ka screen lock (PIN/pattern) hamesha laga ke rakhein',
+      'Agar koi call karke “turant paisa bhejo” ya “aapka account band ho jayega” bole, to pehle family se poochhein, jaldi mein kuch na karein',
+      'Apps aur phone ka software (update) time par update karte rahein',
+      'Social media par OTP, bank details, Aadhaar number kabhi share na karein',
+      'Agar phone ajeeb behave kare (bohot slow, ajeeb ads, battery jaldi khatam), to kisi vishwasniya vyakti ya dukaan se check karayein'
+    ];
+    b.innerHTML = `<p style="font-size:14px;">Neeche diye gaye tips padhein aur jo follow kar liye hain unhe tick karein:</p><div id="surList"></div>`;
+    function load(){ try{ return JSON.parse(localStorage.getItem('devnex-suraksha')||'[]'); }catch(e){ return []; } }
+    function render(){
+      const done = load();
+      document.getElementById('surList').innerHTML = TIPS.map((t,i)=>`<label style="display:flex; gap:10px; align-items:flex-start; background:var(--surface2); border:1px solid var(--border); border-radius:10px; padding:12px; margin-top:8px; font-size:14px; line-height:1.5;"><input type="checkbox" data-i="${i}" ${done.includes(i)?'checked':''} style="margin-top:3px; width:18px; height:18px;">${t}</label>`).join('');
+      document.querySelectorAll('#surList input').forEach(cb=>{
+        cb.onchange = ()=>{
+          let d = load(); const i=+cb.dataset.i;
+          if(cb.checked){ if(!d.includes(i)) d.push(i); } else { d = d.filter(x=>x!==i); }
+          try{ localStorage.setItem('devnex-suraksha', JSON.stringify(d)); }catch(e){}
+        };
+      });
+    }
+    render();
+  },
+  linkcheck(){
+    const b = document.getElementById('toolBody');
+    b.innerHTML = `<p style="color:var(--muted); font-size:13px;">Yeh sirf kuch common warning signs check karta hai — 100% guarantee nahi deta ki link safe hai ya nahi. Shak ho to link kholen hi nahi.</p>
+      <label>Link/URL paste karein</label><input type="text" id="lcIn" placeholder="https://example.com">
+      <div class="row"><button class="btn" id="lcBtn">Check Karein</button></div>
+      <div class="output" id="lcOut"></div>`;
+    document.getElementById('lcBtn').onclick = ()=>{
+      const url = document.getElementById('lcIn').value.trim();
+      if(!url){ document.getElementById('lcOut').textContent='Pehle ek link daalein'; return; }
+      const flags = [];
+      if(!/^https:\/\//i.test(url)) flags.push('⚠️ HTTPS nahi hai (secure connection nahi) — savdhaan rahein');
+      if(/@/.test(url)) flags.push('⚠️ Link mein "@" symbol hai — yeh ek common trick hai asli domain chupaane ke liye');
+      if(/^https?:\/\/\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/.test(url)) flags.push('⚠️ Link ek IP address hai, normal website naam nahi — bahut suspicious');
+      const hyphens = (url.match(/-/g)||[]).length;
+      if(hyphens >= 3) flags.push('⚠️ Link mein bohot saare hyphens (-) hain — fake sites aksar aisa karti hain');
+      if(/(paypal|bank|amazon|flipkart|google)[^.]*\.(?!com|in)[a-z]{2,}/i.test(url)) flags.push('⚠️ Kisi jaani-maani company ka naam hai par domain ending ajeeb lag rahi hai — lookalike ho sakta hai');
+      document.getElementById('lcOut').textContent = flags.length ? flags.join('\n') : '✅ Koi obvious warning sign nahi mila — phir bhi agar sender anjaan hai to savdhaan rahein.';
+    };
+  },
+  display(){
+    const b = document.getElementById('toolBody');
+    b.innerHTML = `<p style="font-size:14px;">Screen full-screen alag-alag colors mein dikhegi. Har color pe dhyan se dekhein — agar koi fixed kaala/chamakta dot dikhe to woh dead/stuck pixel ho sakta hai. Screen par tap karke agla color aayega.</p>
+      <div class="row"><button class="btn" id="dispStart">Test Shuru Karein</button></div>`;
+    const COLORS = ['#ff0000','#00ff00','#0000ff','#ffffff','#000000','#808080'];
+    document.getElementById('dispStart').onclick = ()=>{
+      let idx=0;
+      const ov = document.createElement('div');
+      ov.style.cssText = `position:fixed; inset:0; z-index:9999; background:${COLORS[0]}; display:flex; align-items:flex-end; justify-content:center;`;
+      const exitBtn = document.createElement('button');
+      exitBtn.textContent = 'Band Karein';
+      exitBtn.style.cssText = 'margin:20px; padding:12px 20px; border-radius:10px; border:none; background:#6d5efc; color:#fff; font-size:14px;';
+      exitBtn.onclick = (e)=>{ e.stopPropagation(); document.body.removeChild(ov); };
+      ov.appendChild(exitBtn);
+      ov.onclick = ()=>{ idx = (idx+1)%COLORS.length; ov.style.background = COLORS[idx]; };
+      document.body.appendChild(ov);
+    };
+  },
+  touchtest(){
+    const b = document.getElementById('toolBody');
+    b.innerHTML = `<p style="font-size:14px;">Poori grid par ungli se touch/swipe karein. Jo boxes green ho jayein woh touch kaam kar raha hai. Agar koi box white reh jaye, wahan touch kaam nahi kar raha.</p>
+      <div class="row"><button class="btn secondary" id="ttReset">Reset</button></div>
+      <div id="ttGrid" style="display:grid; grid-template-columns:repeat(6,1fr); gap:4px; margin-top:10px;"></div>`;
+    const grid = document.getElementById('ttGrid');
+    function build(){
+      grid.innerHTML='';
+      for(let i=0;i<48;i++){
+        const cell = document.createElement('div');
+        cell.style.cssText = 'aspect-ratio:1; background:var(--surface2); border:1px solid var(--border); border-radius:4px;';
+        cell.addEventListener('pointerdown', ()=>{ cell.style.background='var(--accent2)'; });
+        cell.addEventListener('pointerenter', (e)=>{ if(e.buttons>0) cell.style.background='var(--accent2)'; });
+        grid.appendChild(cell);
+      }
+    }
+    build();
+    document.getElementById('ttReset').onclick = build;
+  },
+  speakertest(){
+    const b = document.getElementById('toolBody');
+    b.innerHTML = `<p style="font-size:14px;">Headphone na lagayein — phone ke speaker se seedha sunein. Left aur Right dono test karein.</p>
+      <div class="row"><button class="btn" id="spLeft">Left Speaker</button><button class="btn" id="spRight">Right Speaker</button><button class="btn secondary" id="spBoth">Dono</button><button class="btn secondary" id="spStop">Band Karein</button></div>`;
+    let ctx=null, osc=null, pan=null;
+    function play(pos){
+      stop();
+      ctx = new (window.AudioContext||window.webkitAudioContext)();
+      osc = ctx.createOscillator(); pan = ctx.createStereoPanner();
+      osc.frequency.value = 440; pan.pan.value = pos;
+      osc.connect(pan).connect(ctx.destination); osc.start();
+    }
+    function stop(){ if(osc){ try{osc.stop();}catch(e){} osc=null; } if(ctx){ try{ctx.close();}catch(e){} ctx=null; } }
+    document.getElementById('spLeft').onclick = ()=>play(-1);
+    document.getElementById('spRight').onclick = ()=>play(1);
+    document.getElementById('spBoth').onclick = ()=>play(0);
+    document.getElementById('spStop').onclick = stop;
+  },
+  mictest(){
+    const b = document.getElementById('toolBody');
+    b.innerHTML = `<p style="font-size:14px;">3 second bolke record karein, fir sunke check karein mic kaam kar raha hai ya nahi.</p>
+      <div class="row"><button class="btn" id="micRec">Record Karein (3s)</button></div>
+      <div id="micErr" class="err"></div><div id="micPlay" style="margin-top:12px;"></div>`;
+    document.getElementById('micRec').onclick = async ()=>{
+      try{
+        const stream = await navigator.mediaDevices.getUserMedia({audio:true});
+        const rec = new MediaRecorder(stream);
+        const chunks=[];
+        rec.ondataavailable = e=>chunks.push(e.data);
+        rec.onstop = ()=>{
+          const blob = new Blob(chunks,{type:'audio/webm'});
+          const url = URL.createObjectURL(blob);
+          document.getElementById('micPlay').innerHTML = `<audio controls src="${url}" style="width:100%;"></audio>`;
+          stream.getTracks().forEach(t=>t.stop());
+        };
+        rec.start();
+        document.getElementById('micErr').textContent='Recording... 3 second bolein';
+        setTimeout(()=>{ rec.stop(); document.getElementById('micErr').textContent=''; }, 3000);
+      }catch(e){ document.getElementById('micErr').textContent='Microphone permission nahi mili ya mic available nahi hai'; }
+    };
+  },
+  vibrationtest(){
+    const b = document.getElementById('toolBody');
+    b.innerHTML = `<p style="font-size:14px;">Button dabayein, agar phone vibrate kare to vibration motor theek hai. (Kuch phones/iPhone Safari is feature ko support nahi karte.)</p>
+      <div class="row"><button class="btn" id="vibShort">Short Vibration</button><button class="btn" id="vibLong">Long Vibration</button><button class="btn secondary" id="vibPattern">Pattern Test</button></div>
+      <div id="vibOut" class="output"></div>`;
+    function go(pattern,label){
+      if(navigator.vibrate){ navigator.vibrate(pattern); document.getElementById('vibOut').textContent = label+' bheja gaya — agar mehsoos hua to vibration motor theek hai.'; }
+      else document.getElementById('vibOut').textContent = 'Yeh browser/device vibration ko support nahi karta.';
+    }
+    document.getElementById('vibShort').onclick = ()=>go(200,'Short vibration');
+    document.getElementById('vibLong').onclick = ()=>go(1000,'Long vibration');
+    document.getElementById('vibPattern').onclick = ()=>go([200,100,200,100,200],'Pattern vibration');
+  },
+  camtest(){
+    const b = document.getElementById('toolBody');
+    b.innerHTML = `<p style="font-size:14px;">Camera start karke dekhein tasveer saaf aa rahi hai ya nahi, focus/blur check karein.</p>
+      <div class="row"><button class="btn" id="camStart">Camera Start Karein</button><button class="btn secondary" id="camStop">Band Karein</button></div>
+      <div id="camErr" class="err"></div>
+      <video id="camVideo" autoplay playsinline style="width:100%; border-radius:10px; margin-top:10px; background:#000;"></video>`;
+    let stream=null;
+    document.getElementById('camStart').onclick = async ()=>{
+      try{
+        stream = await navigator.mediaDevices.getUserMedia({video:true});
+        document.getElementById('camVideo').srcObject = stream;
+        document.getElementById('camErr').textContent='';
+      }catch(e){ document.getElementById('camErr').textContent='Camera permission nahi mili ya camera available nahi hai'; }
+    };
+    document.getElementById('camStop').onclick = ()=>{ if(stream){ stream.getTracks().forEach(t=>t.stop()); stream=null; document.getElementById('camVideo').srcObject=null; } };
+  },
+  batteryinfo(){
+    const b = document.getElementById('toolBody');
+    b.innerHTML = `<div class="row"><button class="btn" id="battBtn">Battery Check Karein</button></div><div class="output" id="battOut"></div>`;
+    document.getElementById('battBtn').onclick = async ()=>{
+      if(navigator.getBattery){
+        try{
+          const bat = await navigator.getBattery();
+          document.getElementById('battOut').textContent = `Battery level: ${Math.round(bat.level*100)}%\nCharging: ${bat.charging ? 'Haan' : 'Nahi'}`;
+        }catch(e){ document.getElementById('battOut').textContent='Battery info nahi mil saka.'; }
+      } else {
+        document.getElementById('battOut').textContent = 'Yeh browser battery info support nahi karta (kai modern browsers isse privacy ke liye band kar dete hain). Phone ki Settings > Battery mein asli jaankari dekhein.';
+      }
+    };
+  },
+  heartrate(){
+    const b = document.getElementById('toolBody');
+    b.innerHTML = `<p style="font-size:14px; color:var(--danger);"><b>Dhyan dein:</b> Yeh ek wellness estimate hai, medical device nahi. Agar dil se juda koi real problem ho to doctor se milein, is number par depend na karein.</p>
+      <p style="font-size:14px;">Apni ungli ko camera lens aur flash dono ke upar halke se rakhein, bilkul na hilayein, 15 second tak intezaar karein.</p>
+      <div class="row"><button class="btn" id="hrStart">Measure Shuru Karein</button></div>
+      <div id="hrErr" class="err"></div><div class="output" id="hrOut"></div>
+      <video id="hrVideo" autoplay playsinline style="display:none;"></video><canvas id="hrCanvas" width="20" height="20" style="display:none;"></canvas>`;
+    document.getElementById('hrStart').onclick = async ()=>{
+      const out = document.getElementById('hrOut'); const err = document.getElementById('hrErr');
+      out.textContent=''; err.textContent='';
+      try{
+        const stream = await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'}});
+        const track = stream.getVideoTracks()[0];
+        try{ await track.applyConstraints({advanced:[{torch:true}]}); }catch(e){}
+        const video = document.getElementById('hrVideo'); video.srcObject = stream;
+        const canvas = document.getElementById('hrCanvas'); const ctx = canvas.getContext('2d');
+        const samples = [];
+        out.textContent = 'Naap rahe hain... hilna mat.';
+        const start = Date.now();
+        const iv = setInterval(()=>{
+          ctx.drawImage(video,0,0,20,20);
+          const d = ctx.getImageData(0,0,20,20).data;
+          let sum=0; for(let i=0;i<d.length;i+=4) sum += d[i];
+          samples.push(sum/(d.length/4));
+          if(Date.now()-start > 15000){
+            clearInterval(iv);
+            track.stop();
+            let peaks=0; const avg = samples.reduce((a,c)=>a+c,0)/samples.length;
+            for(let i=1;i<samples.length-1;i++){ if(samples[i]>samples[i-1] && samples[i]>samples[i+1] && samples[i]>avg) peaks++; }
+            const bpm = Math.round(peaks * (60000/15000));
+            if(bpm < 30 || bpm > 220) out.textContent = 'Saaf reading nahi mili — ungli ko flash aur camera dono par theek se rakh ke dobara try karein.';
+            else out.textContent = `Estimated Heart Rate: ~${bpm} BPM (yeh ek rough wellness estimate hai, medical reading nahi)`;
+          }
+        }, 100);
+      }catch(e){ err.textContent = 'Camera/flash access nahi mila, ya yeh device support nahi karta.'; }
+    };
+  },
+  bmi(){
+    const b = document.getElementById('toolBody');
+    b.innerHTML = `<label>Height (cm)</label><input type="number" id="bmiH" placeholder="e.g. 165">
+      <label>Weight (kg)</label><input type="number" id="bmiW" placeholder="e.g. 60">
+      <div class="row"><button class="btn" id="bmiBtn">Calculate</button></div>
+      <div class="output" id="bmiOut"></div>
+      <p style="font-size:12px; color:var(--muted); margin-top:10px;">Yeh sirf general reference hai, medical advice nahi. Koi bhi health concern ho to doctor se milein.</p>`;
+    document.getElementById('bmiBtn').onclick = ()=>{
+      const h = +document.getElementById('bmiH').value/100, w = +document.getElementById('bmiW').value;
+      if(!h || !w){ document.getElementById('bmiOut').textContent='Height aur weight dono daalein'; return; }
+      const bmi = w/(h*h);
+      let cat;
+      if(bmi<18.5) cat='Underweight'; else if(bmi<25) cat='Normal'; else if(bmi<30) cat='Overweight'; else cat='Obese';
+      document.getElementById('bmiOut').textContent = `BMI: ${bmi.toFixed(1)} (${cat})`;
+    };
+  },
+  waterintake(){
+    const b = document.getElementById('toolBody');
+    const today = new Date().toISOString().slice(0,10);
+    function load(){ try{ const d = JSON.parse(localStorage.getItem('devnex-water')||'{}'); return d.date===today ? d.count : 0; }catch(e){ return 0; } }
+    function save(c){ try{ localStorage.setItem('devnex-water', JSON.stringify({date:today,count:c})); }catch(e){} }
+    let count = load();
+    b.innerHTML = `<p style="font-size:14px;">Aaj kitne glass paani piya, track karein.</p>
+      <div class="timer-display" id="wCount">${count} glass</div>
+      <div class="row" style="justify-content:center;"><button class="btn secondary" id="wMinus">− Glass</button><button class="btn" id="wPlus">+ Glass</button></div>
+      <div class="row" style="justify-content:center;"><button class="btn secondary" id="wReset">Reset Aaj</button></div>`;
+    function render(){ document.getElementById('wCount').textContent = count+' glass'; save(count); }
+    document.getElementById('wPlus').onclick = ()=>{ count++; render(); };
+    document.getElementById('wMinus').onclick = ()=>{ count = Math.max(0,count-1); render(); };
+    document.getElementById('wReset').onclick = ()=>{ count=0; render(); };
+  },
+  routine(){
+    const b = document.getElementById('toolBody');
+    b.innerHTML = `<p style="font-size:13px; color:var(--muted);">Yeh reminder tab tak kaam karega jab tak is page/tab ko khula rakhenge — browser band hone par koi bhi website alarm nahi bhej sakti, yeh sabki limit hai.</p>
+      <label>Kaam ka naam</label><input type="text" id="rtName" placeholder="Pani peena hai">
+      <label>Time</label><input type="time" id="rtTime">
+      <div class="row"><button class="btn" id="rtAdd">Add Karein</button></div>
+      <div id="rtList" style="margin-top:14px;"></div>`;
+    function load(){ try{ return JSON.parse(localStorage.getItem('devnex-routines')||'[]'); }catch(e){ return []; } }
+    function save(list){ try{ localStorage.setItem('devnex-routines', JSON.stringify(list)); }catch(e){} }
+    function render(){
+      const list = load();
+      document.getElementById('rtList').innerHTML = list.length ? list.map(r=>`<div class="output" style="margin-top:8px; display:flex; justify-content:space-between; align-items:center; gap:8px;"><span><b>${r.time}</b> — ${r.name}</span><span style="display:flex; gap:6px;"><button class="btn secondary" style="padding:4px 10px;" data-toggle="${r.id}">${r.active?'ON':'OFF'}</button><button class="btn secondary" style="padding:4px 10px;" data-del="${r.id}">Delete</button></span></div>`).join('') : '<p style="color:var(--muted);">Abhi koi routine nahi hai.</p>';
+      document.querySelectorAll('[data-toggle]').forEach(btn=>{ btn.onclick=()=>{ const l=load(); const r=l.find(x=>x.id===btn.dataset.toggle); if(r) r.active=!r.active; save(l); render(); }; });
+      document.querySelectorAll('[data-del]').forEach(btn=>{ btn.onclick=()=>{ let l=load(); l=l.filter(x=>x.id!==btn.dataset.del); save(l); render(); }; });
+    }
+    document.getElementById('rtAdd').onclick = ()=>{
+      const name = document.getElementById('rtName').value.trim();
+      const time = document.getElementById('rtTime').value;
+      if(!name || !time) return;
+      if('Notification' in window && Notification.permission==='default'){ try{ Notification.requestPermission(); }catch(e){} }
+      const list = load();
+      list.push({id:Date.now().toString(36), name, time, active:true});
+      save(list);
+      document.getElementById('rtName').value=''; document.getElementById('rtTime').value='';
+      render();
+    };
+    render();
+  },
+  docscan(){
+    const b = document.getElementById('toolBody');
+    b.innerHTML = `<p style="font-size:14px;">Kisi paper/document ki photo khinchein — yeh use saaf, scan jaisa bana dega.</p>
+      <div class="row"><button class="btn" id="dsStart">Camera Kholein</button><button class="btn secondary" id="dsCapture" disabled>Photo Khinchein</button></div>
+      <div id="dsErr" class="err"></div>
+      <video id="dsVideo" autoplay playsinline style="width:100%; border-radius:10px; margin-top:10px; background:#000; display:none;"></video>
+      <canvas id="dsCanvas" style="display:none;"></canvas>
+      <div id="dsResult" style="margin-top:12px;"></div>`;
+    let dsStream=null;
+    document.getElementById('dsStart').onclick = async ()=>{
+      try{
+        dsStream = await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'}});
+        const v = document.getElementById('dsVideo'); v.srcObject = dsStream; v.style.display='block';
+        document.getElementById('dsCapture').disabled=false;
+        document.getElementById('dsErr').textContent='';
+      }catch(e){ document.getElementById('dsErr').textContent='Camera permission nahi mili.'; }
+    };
+    document.getElementById('dsCapture').onclick = ()=>{
+      const v = document.getElementById('dsVideo'); const c = document.getElementById('dsCanvas');
+      c.width = v.videoWidth || 720; c.height = v.videoHeight || 1280;
+      const ctx = c.getContext('2d');
+      ctx.filter = 'grayscale(100%) contrast(160%) brightness(115%)';
+      ctx.drawImage(v,0,0,c.width,c.height);
+      const dataUrl = c.toDataURL('image/jpeg',0.92);
+      document.getElementById('dsResult').innerHTML = `<img src="${dataUrl}" style="width:100%; border-radius:10px; border:1px solid var(--border);"><div class="row" style="margin-top:10px;"><a class="btn" href="${dataUrl}" download="devnex-scan.jpg">Download Scan</a></div><p style="font-size:12px; color:var(--muted); margin-top:6px;">PDF chahiye to apne phone ke "Print" option se is image ko "Save as PDF" kar sakte hain.</p>`;
+      if(dsStream){ dsStream.getTracks().forEach(t=>t.stop()); }
+      document.getElementById('dsVideo').style.display='none';
+    };
+  },
+  notepad(){
+    const b = document.getElementById('toolBody');
+    b.innerHTML = `<div class="row"><button class="btn" id="npNew">+ Nayi Page</button></div>
+      <div id="npList" style="margin-top:10px; display:flex; gap:8px; flex-wrap:wrap;"></div>
+      <div id="npEditorWrap" style="margin-top:14px;"></div>`;
+    function load(){ try{ return JSON.parse(localStorage.getItem('devnex-notepad')||'[]'); }catch(e){ return []; } }
+    function save(pages){ try{ localStorage.setItem('devnex-notepad', JSON.stringify(pages)); }catch(e){} }
+    let pages = load(); let activeId = pages.length ? pages[0].id : null;
+    function renderList(){
+      document.getElementById('npList').innerHTML = pages.map(p=>`<button class="card" style="padding:8px 12px; ${p.id===activeId?'border-color:var(--accent);':''}" data-open="${p.id}">${(p.title||'Untitled')}</button>`).join('');
+      document.querySelectorAll('#npList [data-open]').forEach(btn=>{ btn.onclick = ()=>{ activeId = btn.dataset.open; renderList(); renderEditor(); }; });
+    }
+    function renderEditor(){
+      const wrap = document.getElementById('npEditorWrap');
+      const p = pages.find(x=>x.id===activeId);
+      if(!p){ wrap.innerHTML = '<p style="color:var(--muted);">Koi page nahi hai, "+ Nayi Page" dabayein.</p>'; return; }
+      wrap.innerHTML = `<input type="text" id="npTitle" value="${p.title||''}" placeholder="Title" style="font-weight:700; margin-bottom:8px;">
+        <textarea id="npBody" style="min-height:260px; background:repeating-linear-gradient(var(--surface2) 0px, var(--surface2) 27px, var(--border) 28px); line-height:28px; font-family:inherit; font-size:15px;">${p.content||''}</textarea>
+        <div class="row"><button class="btn secondary" id="npDelete">Page Delete Karein</button></div>`;
+      document.getElementById('npTitle').oninput = (e)=>{ p.title = e.target.value; save(pages); renderList(); };
+      document.getElementById('npBody').oninput = (e)=>{ p.content = e.target.value; save(pages); };
+      document.getElementById('npDelete').onclick = ()=>{ pages = pages.filter(x=>x.id!==p.id); save(pages); activeId = pages.length?pages[0].id:null; renderList(); renderEditor(); };
+    }
+    document.getElementById('npNew').onclick = ()=>{
+      const p = {id:Date.now().toString(36), title:'', content:''};
+      pages.unshift(p); activeId = p.id; save(pages); renderList(); renderEditor();
+    };
+    if(!pages.length){ pages.push({id:Date.now().toString(36), title:'Meri Pehli Note', content:''}); activeId=pages[0].id; save(pages); }
+    renderList(); renderEditor();
+  },
+  codestudio(){
+    const b = document.getElementById('toolBody');
+    const LANGS = {html:'HTML', css:'CSS', js:'JavaScript', py:'Python', java:'Java', c:'C', cpp:'C++', json:'JSON', xml:'XML', md:'Markdown', txt:'Text'};
+    function getExt(name){ const p=name.split('.'); return p.length>1 ? p.pop().toLowerCase() : 'txt'; }
+    function loadProjects(){ try{ return JSON.parse(localStorage.getItem('devnex-projects')||'[]'); }catch(e){ return []; } }
+    function saveProjects(list){ try{ localStorage.setItem('devnex-projects', JSON.stringify(list)); }catch(e){} }
+    function getActive(){ return localStorage.getItem('devnex-active-project'); }
+    function setActiveId(id){ try{ localStorage.setItem('devnex-active-project', id); }catch(e){} }
+    let projects = loadProjects();
+    if(!projects.length){
+      const pid = Date.now().toString(36);
+      projects = [{id:pid, name:'My Project', activeFile:0, files:[
+        {name:'index.html', content:'<!DOCTYPE html>\n<html>\n<head>\n<title>My Page</title>\n</head>\n<body>\n<h1>Hello DEVNEX</h1>\n</body>\n</html>'},
+        {name:'style.css', content:'body{\n  font-family: sans-serif;\n}'},
+        {name:'script.js', content:'console.log("Hello from DEVNEX");'}
+      ]}];
+      saveProjects(projects); setActiveId(pid);
+    }
+    let activeProjectId = getActive() || projects[0].id;
+    if(!projects.find(p=>p.id===activeProjectId)){ activeProjectId = projects[0].id; setActiveId(activeProjectId); }
+    function currentProject(){ return projects.find(p=>p.id===activeProjectId); }
+    function render(){
+      const proj = currentProject();
+      if(proj.activeFile===undefined || proj.activeFile>=proj.files.length) proj.activeFile=0;
+      const file = proj.files[proj.activeFile];
+      const ext = getExt(file.name);
+      const noRun = (ext==='py'||ext==='java'||ext==='c'||ext==='cpp') ? ' — yeh editor sirf likhne ke liye hai, is page par run/compile nahi hota' : '';
+      b.innerHTML = `
+        <div class="row"><select id="csProjSel" style="flex:1;"></select><button class="btn secondary" id="csNewProj">+ Project</button></div>
+        <div class="row"><button class="btn secondary" id="csRenameProj">Rename</button><button class="btn secondary" id="csDeleteProj">Delete</button><button class="btn secondary" id="csExportProj">Export</button><label class="btn secondary" style="cursor:pointer;">Import<input type="file" id="csImportProj" accept=".json" style="display:none;"></label></div>
+        <div id="csTabs" style="display:flex; gap:6px; flex-wrap:wrap; margin-top:12px;"></div>
+        <div class="row"><button class="btn secondary" id="csNewFile">+ File</button><button class="btn secondary" id="csRenameFile">Rename File</button><button class="btn secondary" id="csDeleteFile">Delete File</button></div>
+        <p style="font-size:11px; color:var(--muted); margin:8px 0 2px;">${LANGS[ext]||'Text'}${noRun}</p>
+        <div style="display:flex; border:1px solid var(--border); border-radius:10px; overflow:hidden;">
+          <div id="csGutter" style="background:var(--surface2); color:var(--muted); font-family:ui-monospace,monospace; font-size:13px; line-height:20px; padding:8px 6px; text-align:right; user-select:none; overflow:hidden; min-width:34px; white-space:pre;"></div>
+          <textarea id="csEditor" spellcheck="false" style="flex:1; font-family:ui-monospace,monospace; font-size:13px; line-height:20px; padding:8px; border:none; outline:none; resize:none; white-space:pre; overflow:auto; background:var(--surface); color:var(--text); min-height:280px;"></textarea>
+        </div>
+        <div class="row"><button class="btn" id="csPreview">Live Preview</button><button class="btn secondary" id="csDownload">Download File</button></div>
+        <div class="row" style="margin-top:6px;"><input type="text" id="csFind" placeholder="Find" style="flex:1;"><input type="text" id="csReplace" placeholder="Replace" style="flex:1;"><button class="btn secondary" id="csReplaceBtn">Replace All</button></div>
+        <div id="csPreviewWrap" style="margin-top:12px;"></div>
+        <div style="font-size:11px; color:var(--muted); margin-top:6px;" id="csSaved"></div>`;
+      const sel = document.getElementById('csProjSel');
+      sel.innerHTML = projects.map(p=>`<option value="${p.id}" ${p.id===activeProjectId?'selected':''}>${p.name}</option>`).join('');
+      sel.onchange = ()=>{ activeProjectId = sel.value; setActiveId(activeProjectId); render(); };
+      const tabsEl = document.getElementById('csTabs');
+      tabsEl.innerHTML = proj.files.map((f,i)=>`<button class="card" style="padding:6px 10px; ${i===proj.activeFile?'border-color:var(--accent);':''}" data-tab="${i}">${f.name}</button>`).join('');
+      tabsEl.querySelectorAll('[data-tab]').forEach(btn=>{ btn.onclick = ()=>{ proj.activeFile = +btn.dataset.tab; saveProjects(projects); render(); }; });
+      const editor = document.getElementById('csEditor');
+      const gutter = document.getElementById('csGutter');
+      editor.value = file.content;
+      function updateGutter(){
+        const n = editor.value.split('\n').length;
+        let nums=''; for(let i=1;i<=n;i++) nums += i+'\n';
+        gutter.textContent = nums; gutter.scrollTop = editor.scrollTop;
+      }
+      updateGutter();
+      let saveTimer;
+      function onEdit(){
+        file.content = editor.value; updateGutter();
+        clearTimeout(saveTimer);
+        document.getElementById('csSaved').textContent = 'Saving...';
+        saveTimer = setTimeout(()=>{ saveProjects(projects); const s=document.getElementById('csSaved'); if(s) s.textContent='Saved'; }, 500);
+      }
+      editor.addEventListener('input', onEdit);
+      editor.addEventListener('scroll', ()=>{ gutter.scrollTop = editor.scrollTop; });
+      editor.addEventListener('keydown', e=>{
+        if(e.key==='Tab'){
+          e.preventDefault();
+          const s=editor.selectionStart, en=editor.selectionEnd;
+          editor.value = editor.value.slice(0,s)+'  '+editor.value.slice(en);
+          editor.selectionStart = editor.selectionEnd = s+2; onEdit();
+        } else if(e.key==='Enter'){
+          const s = editor.selectionStart;
+          const before = editor.value.slice(0,s);
+          const line = before.slice(before.lastIndexOf('\n')+1);
+          const indent = (line.match(/^\s*/)||[''])[0];
+          const extra = /[{:]\s*$/.test(line) ? '  ' : '';
+          setTimeout(()=>{
+            const pos = editor.selectionStart;
+            editor.value = editor.value.slice(0,pos)+indent+extra+editor.value.slice(pos);
+            editor.selectionStart = editor.selectionEnd = pos+indent.length+extra.length; onEdit();
+          },0);
+        }
+      });
+      document.getElementById('csNewProj').onclick = ()=>{
+        const name = prompt('Naye project ka naam:'); if(!name) return;
+        const pid = Date.now().toString(36);
+        projects.push({id:pid, name, activeFile:0, files:[{name:'index.html', content:'<!DOCTYPE html>\n<html>\n<body>\n<h1>New Project</h1>\n</body>\n</html>'}]});
+        activeProjectId = pid; setActiveId(pid); saveProjects(projects); render();
+      };
+      document.getElementById('csRenameProj').onclick = ()=>{ const name = prompt('Naya naam:', proj.name); if(!name) return; proj.name = name; saveProjects(projects); render(); };
+      document.getElementById('csDeleteProj').onclick = ()=>{
+        if(projects.length<=1){ alert('Kam se kam ek project zaroori hai.'); return; }
+        if(!confirm('Pakka project delete karna hai?')) return;
+        projects = projects.filter(p=>p.id!==activeProjectId);
+        activeProjectId = projects[0].id; setActiveId(activeProjectId); saveProjects(projects); render();
+      };
+      document.getElementById('csExportProj').onclick = ()=>{
+        const blob = new Blob([JSON.stringify(proj,null,2)],{type:'application/json'});
+        const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = proj.name.replace(/\s+/g,'_')+'.json'; a.click();
+      };
+      document.getElementById('csImportProj').onchange = (e)=>{
+        const f = e.target.files[0]; if(!f) return;
+        const reader = new FileReader();
+        reader.onload = ()=>{
+          try{
+            const imported = JSON.parse(reader.result);
+            if(!imported.files || !Array.isArray(imported.files)) throw new Error('bad');
+            imported.id = Date.now().toString(36);
+            projects.push(imported); activeProjectId = imported.id; setActiveId(activeProjectId); saveProjects(projects); render();
+          }catch(err){ alert('Import fail hua — sahi DEVNEX project JSON file chunein.'); }
+        };
+        reader.readAsText(f);
+      };
+      document.getElementById('csNewFile').onclick = ()=>{
+        const name = prompt('File ka naam (extension ke saath, jaise about.html):'); if(!name) return;
+        proj.files.push({name, content:''}); proj.activeFile = proj.files.length-1; saveProjects(projects); render();
+      };
+      document.getElementById('csRenameFile').onclick = ()=>{ const name = prompt('Naya file naam:', file.name); if(!name) return; file.name = name; saveProjects(projects); render(); };
+      document.getElementById('csDeleteFile').onclick = ()=>{
+        if(proj.files.length<=1){ alert('Kam se kam ek file zaroori hai.'); return; }
+        if(!confirm('File delete karein?')) return;
+        proj.files.splice(proj.activeFile,1); proj.activeFile = 0; saveProjects(projects); render();
+      };
+      document.getElementById('csPreview').onclick = ()=>{
+        const htmlFile = proj.files.find(f=>getExt(f.name)==='html');
+        const wrap = document.getElementById('csPreviewWrap');
+        if(!htmlFile){ wrap.innerHTML = '<p style="color:var(--muted);">Preview ke liye ek .html file honi chahiye.</p>'; return; }
+        const css = proj.files.filter(f=>getExt(f.name)==='css').map(f=>f.content).join('\n');
+        const js = proj.files.filter(f=>getExt(f.name)==='js').map(f=>f.content).join('\n');
+        let srcdoc = htmlFile.content;
+        srcdoc = srcdoc.includes('</head>') ? srcdoc.replace('</head>', '<style>'+css+'</style></head>') : '<style>'+css+'</style>'+srcdoc;
+        srcdoc = srcdoc.includes('</body>') ? srcdoc.replace('</body>', '<script>'+js+'<\/script></body>') : srcdoc+'<script>'+js+'<\/script>';
+        wrap.innerHTML = `<div class="row" style="margin-bottom:8px;"><button class="btn secondary" data-vp="375">Mobile</button><button class="btn secondary" data-vp="768">Tablet</button><button class="btn secondary" data-vp="100%">Desktop</button><button class="btn secondary" id="csFullscreen">Fullscreen</button><button class="btn secondary" id="csRefreshPrev">Refresh</button></div><div style="overflow-x:auto;"><iframe id="csFrame" style="width:100%; height:300px; border:1px solid var(--border); border-radius:10px; background:#fff;" sandbox="allow-scripts"></iframe></div>`;
+        const frame = document.getElementById('csFrame');
+        frame.srcdoc = srcdoc;
+        wrap.querySelectorAll('[data-vp]').forEach(btn=>{ btn.onclick = ()=>{ frame.style.width = btn.dataset.vp==='100%' ? '100%' : btn.dataset.vp+'px'; }; });
+        document.getElementById('csRefreshPrev').onclick = ()=>{ frame.srcdoc = srcdoc; };
+        document.getElementById('csFullscreen').onclick = ()=>{ if(frame.requestFullscreen) frame.requestFullscreen(); };
+      };
+      document.getElementById('csDownload').onclick = ()=>{
+        const blob = new Blob([file.content],{type:'text/plain'});
+        const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = file.name; a.click();
+      };
+      document.getElementById('csReplaceBtn').onclick = ()=>{
+        const find = document.getElementById('csFind').value;
+        const rep = document.getElementById('csReplace').value;
+        if(!find) return;
+        editor.value = editor.value.split(find).join(rep); onEdit();
+      };
+    }
+    render();
+  },
+  apitester(){
+    const b = document.getElementById('toolBody');
+    b.innerHTML = `<div class="row"><select id="atMethod"><option>GET</option><option>POST</option><option>PUT</option><option>PATCH</option><option>DELETE</option></select><input type="text" id="atUrl" placeholder="https://api.example.com/..." style="flex:2;"></div>
+      <label>Headers (ek line mein ek, jaise Content-Type: application/json)</label><textarea id="atHeaders" style="min-height:60px;"></textarea>
+      <label>Body (JSON, GET/DELETE ke liye khali chhodein)</label><textarea id="atBody" style="min-height:80px;"></textarea>
+      <div class="row"><button class="btn" id="atSend">Send Request</button></div>
+      <div id="atErr" class="err"></div><div class="output" id="atOut"></div>
+      <div id="atHistory" style="margin-top:14px;"></div>`;
+    function loadHist(){ try{ return JSON.parse(localStorage.getItem('devnex-apihistory')||'[]'); }catch(e){ return []; } }
+    function saveHist(h){ try{ localStorage.setItem('devnex-apihistory', JSON.stringify(h.slice(0,10))); }catch(e){} }
+    function renderHist(){
+      const h = loadHist();
+      document.getElementById('atHistory').innerHTML = h.length ? '<label>Recent Requests</label>' + h.map((r,i)=>`<div class="output" style="margin-top:6px; cursor:pointer;" data-h="${i}">${r.method} ${r.url}</div>`).join('') : '';
+      document.querySelectorAll('[data-h]').forEach(el=>{
+        el.onclick = ()=>{ const r = loadHist()[+el.dataset.h]; document.getElementById('atMethod').value=r.method; document.getElementById('atUrl').value=r.url; document.getElementById('atHeaders').value=r.headers||''; document.getElementById('atBody').value=r.body||''; };
+      });
+    }
+    renderHist();
+    document.getElementById('atSend').onclick = async ()=>{
+      const method = document.getElementById('atMethod').value;
+      const url = document.getElementById('atUrl').value.trim();
+      const headersText = document.getElementById('atHeaders').value;
+      const bodyText = document.getElementById('atBody').value;
+      const err = document.getElementById('atErr'); const out = document.getElementById('atOut');
+      err.textContent=''; out.textContent='Sending...';
+      if(!url){ err.textContent='URL daalein'; out.textContent=''; return; }
+      const headers = {};
+      headersText.split('\n').forEach(line=>{ const idx=line.indexOf(':'); if(idx>0){ headers[line.slice(0,idx).trim()] = line.slice(idx+1).trim(); } });
+      const opts = { method, headers };
+      if(method!=='GET' && method!=='DELETE' && bodyText.trim()){ opts.body = bodyText; }
+      const start = performance.now();
+      try{
+        const res = await fetch(url, opts);
+        const time = Math.round(performance.now()-start);
+        let bodyOut;
+        const ct = res.headers.get('content-type')||'';
+        if(ct.includes('application/json')){ const j = await res.json(); bodyOut = JSON.stringify(j,null,2); }
+        else { bodyOut = await res.text(); }
+        out.textContent = `Status: ${res.status} ${res.statusText}\nTime: ${time}ms\n\n${bodyOut}`;
+        const hist = loadHist(); hist.unshift({method,url,headers:headersText,body:bodyText}); saveHist(hist); renderHist();
+      }catch(e){
+        out.textContent='';
+        err.textContent = 'Request fail hua — ho sakta hai CORS block kar raha ho (server ne is website se request allow nahi ki), ya URL/internet mein problem ho. Error: '+e.message;
+      }
+    };
+  },
+  markdown(){
+    const b = document.getElementById('toolBody');
+    b.innerHTML = `<div class="row"><button class="btn secondary" id="mdExportMd">Export .md</button><button class="btn secondary" id="mdExportHtml">Export .html</button></div>
+      <div style="display:flex; gap:10px; margin-top:10px; flex-wrap:wrap;">
+        <textarea id="mdInput" style="flex:1; min-width:140px; min-height:300px;" placeholder="# Mera Document"></textarea>
+        <div id="mdPreview" class="output" style="flex:1; min-width:140px; min-height:300px; overflow:auto; background:#fff; color:#111;"></div>
+      </div>`;
+    const input = document.getElementById('mdInput'); const preview = document.getElementById('mdPreview');
+    try{ input.value = localStorage.getItem('devnex-markdown') || '# Mera Document\n\nYahan likhna shuru karein...'; }catch(e){}
+    function update(){
+      try{ localStorage.setItem('devnex-markdown', input.value); }catch(e){}
+      if(window.marked){ preview.innerHTML = marked.parse(input.value); } else { preview.textContent = input.value; }
+    }
+    input.addEventListener('input', update); update();
+    document.getElementById('mdExportMd').onclick = ()=>{
+      const blob = new Blob([input.value],{type:'text/markdown'});
+      const a = document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='document.md'; a.click();
+    };
+    document.getElementById('mdExportHtml').onclick = ()=>{
+      const html = window.marked ? marked.parse(input.value) : input.value;
+      const blob = new Blob(['<html><body>'+html+'</body></html>'],{type:'text/html'});
+      const a = document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='document.html'; a.click();
+    };
+  },
+  backup(){
+    const b = document.getElementById('toolBody');
+    b.innerHTML = `<p style="font-size:14px;">Is tool se DEVNEX ka pura data (notes, projects, routines, water tracker, etc.) ek file mein backup karein, aur kisi doosre phone/browser mein wapas laayein.</p>
+      <div class="row"><button class="btn" id="bkExport">Pura Data Export Karein</button></div>
+      <div class="row"><label class="btn secondary" style="cursor:pointer;">Data Import Karein<input type="file" id="bkImport" accept=".json" style="display:none;"></label></div>
+      <div id="bkErr" class="err"></div><div class="output" id="bkOut"></div>`;
+    document.getElementById('bkExport').onclick = ()=>{
+      const data = {};
+      for(let i=0;i<localStorage.length;i++){ const k = localStorage.key(i); if(k.indexOf('devnex-')===0) data[k]=localStorage.getItem(k); }
+      const blob = new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+      const a = document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='devnex-backup.json'; a.click();
+      document.getElementById('bkOut').textContent = 'Backup download ho gaya.';
+    };
+    document.getElementById('bkImport').onchange = (e)=>{
+      const f = e.target.files[0]; if(!f) return;
+      const reader = new FileReader();
+      reader.onload = ()=>{
+        try{
+          const data = JSON.parse(reader.result);
+          Object.keys(data).forEach(k=>{ if(k.indexOf('devnex-')===0) localStorage.setItem(k, data[k]); });
+          document.getElementById('bkOut').textContent = 'Data wapas aa gaya! Page refresh karein taaki sab jagah dikhe.';
+          document.getElementById('bkErr').textContent='';
+        }catch(err){ document.getElementById('bkErr').textContent = 'Yeh sahi backup file nahi lag rahi.'; }
+      };
+      reader.readAsText(f);
+    };
+  },
+  viewer3d(){
+    const b = document.getElementById('toolBody');
+    b.innerHTML = `<p style="font-size:13px; color:var(--muted);">Abhi sirf .obj files support hoti hain (GLB/GLTF ke liye extra loader chahiye jo is environment mein reliably available nahi hai).</p>
+      <div class="row"><input type="file" id="v3File" accept=".obj"><input type="color" id="v3Bg" value="#15171c"></div>
+      <div class="row"><button class="btn secondary" id="v3Wire">Wireframe Toggle</button><button class="btn secondary" id="v3Reset">Reset View</button><button class="btn secondary" id="v3Shot">Screenshot</button></div>
+      <p style="font-size:12px; color:var(--muted); margin-top:6px;">Ungli se ghumayein, pinch/scroll se zoom karein.</p>
+      <canvas id="v3Canvas" style="width:100%; height:320px; border-radius:10px; border:1px solid var(--border); margin-top:8px; touch-action:none;"></canvas>
+      <div id="v3Err" class="err"></div>`;
+    if(!window.THREE){ document.getElementById('v3Err').textContent='3D library load nahi hui — internet check karein.'; return; }
+    const canvas = document.getElementById('v3Canvas');
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(document.getElementById('v3Bg').value);
+    const camera = new THREE.PerspectiveCamera(50, canvas.clientWidth/canvas.clientHeight, 0.1, 1000);
+    camera.position.set(0,0,5);
+    const renderer = new THREE.WebGLRenderer({canvas, antialias:true});
+    renderer.setSize(canvas.clientWidth, canvas.clientHeight);
+    scene.add(new THREE.AmbientLight(0xffffff,0.7));
+    const dl = new THREE.DirectionalLight(0xffffff,0.8); dl.position.set(5,5,5); scene.add(dl);
+    let mesh=null, dragging=false, lastX=0, lastY=0, dist=5;
+    function animate(){ requestAnimationFrame(animate); renderer.render(scene,camera); }
+    animate();
+    canvas.addEventListener('pointerdown', e=>{ dragging=true; lastX=e.clientX; lastY=e.clientY; });
+    window.addEventListener('pointerup', ()=>{ dragging=false; });
+    canvas.addEventListener('pointermove', e=>{
+      if(!dragging || !mesh) return;
+      const dx = e.clientX-lastX, dy = e.clientY-lastY; lastX=e.clientX; lastY=e.clientY;
+      mesh.rotation.y += dx*0.01; mesh.rotation.x += dy*0.01;
+    });
+    canvas.addEventListener('wheel', e=>{ e.preventDefault(); dist = Math.max(1.5, Math.min(20, dist + e.deltaY*0.005)); camera.position.z = dist; }, {passive:false});
+    document.getElementById('v3Bg').oninput = (e)=>{ scene.background = new THREE.Color(e.target.value); };
+    document.getElementById('v3Wire').onclick = ()=>{ if(mesh) mesh.material.wireframe = !mesh.material.wireframe; };
+    document.getElementById('v3Reset').onclick = ()=>{ if(mesh) mesh.rotation.set(0,0,0); dist=5; camera.position.z=5; };
+    document.getElementById('v3Shot').onclick = ()=>{
+      renderer.render(scene,camera);
+      const a = document.createElement('a'); a.href = canvas.toDataURL('image/png'); a.download='devnex-3d-screenshot.png'; a.click();
+    };
+    function parseOBJ(text){
+      const verts=[]; const faces=[];
+      text.split('\n').forEach(line=>{
+        line=line.trim();
+        if(line.indexOf('v ')===0){ const p=line.split(/\s+/); verts.push([parseFloat(p[1]),parseFloat(p[2]),parseFloat(p[3])]); }
+        else if(line.indexOf('f ')===0){
+          const p=line.split(/\s+/).slice(1).map(s=>parseInt(s.split('/')[0])-1);
+          for(let i=1;i<p.length-1;i++){ faces.push([p[0],p[i],p[i+1]]); }
+        }
+      });
+      const positions=[];
+      faces.forEach(f=>{ f.forEach(idx=>{ const v=verts[idx]; if(v) positions.push(v[0],v[1],v[2]); }); });
+      return new Float32Array(positions);
+    }
+    document.getElementById('v3File').onchange = (e)=>{
+      const f = e.target.files[0]; if(!f) return;
+      const reader = new FileReader();
+      reader.onload = ()=>{
+        try{
+          const positions = parseOBJ(reader.result);
+          if(!positions.length) throw new Error('empty');
+          if(mesh) scene.remove(mesh);
+          const geo = new THREE.BufferGeometry();
+          geo.setAttribute('position', new THREE.BufferAttribute(positions,3));
+          geo.computeVertexNormals();
+          geo.computeBoundingSphere();
+          const r = geo.boundingSphere ? geo.boundingSphere.radius||1 : 1;
+          const mat = new THREE.MeshStandardMaterial({color:0x6d5efc, side:THREE.DoubleSide});
+          mesh = new THREE.Mesh(geo, mat);
+          mesh.scale.setScalar(1.5/r);
+          if(geo.boundingSphere) mesh.position.copy(geo.boundingSphere.center).multiplyScalar(-1.5/r);
+          scene.add(mesh);
+          document.getElementById('v3Err').textContent='';
+        }catch(err){ document.getElementById('v3Err').textContent = 'Yeh .obj file parse nahi ho payi.'; }
+      };
+      reader.readAsText(f);
+    };
+  },
+  logomaker(){
+    const b = document.getElementById('toolBody');
+    b.innerHTML = `<label>Text</label><input type="text" id="lgText" value="DX">
+      <label>Font</label><select id="lgFont"><option value="Arial">Arial</option><option value="Georgia">Georgia</option><option value="Impact">Impact</option><option value="'Courier New'">Courier New</option></select>
+      <label>Text Color</label><input type="color" id="lgColor" value="#ffffff">
+      <label>Background Color</label><input type="color" id="lgBg" value="#6d5efc">
+      <label>Shape</label><select id="lgShape"><option value="circle">Circle</option><option value="square">Rounded Square</option><option value="none">No Background</option></select>
+      <div class="row"><button class="btn" id="lgGen">Generate</button></div>
+      <canvas id="lgCanvas" width="400" height="400" style="width:100%; max-width:280px; margin-top:12px; border-radius:10px; border:1px solid var(--border);"></canvas>
+      <div class="row"><button class="btn secondary" id="lgPng">Download PNG</button><button class="btn secondary" id="lgSvg">Download SVG</button></div>`;
+    function draw(){
+      const c = document.getElementById('lgCanvas'); const ctx = c.getContext('2d');
+      ctx.clearRect(0,0,c.width,c.height);
+      const shape = document.getElementById('lgShape').value;
+      const bg = document.getElementById('lgBg').value;
+      if(shape!=='none'){
+        ctx.fillStyle=bg;
+        if(shape==='circle'){ ctx.beginPath(); ctx.arc(200,200,200,0,Math.PI*2); ctx.fill(); }
+        else { ctx.beginPath(); const r=60; ctx.moveTo(r,0); ctx.arcTo(400,0,400,400,r); ctx.arcTo(400,400,0,400,r); ctx.arcTo(0,400,0,0,r); ctx.arcTo(0,0,400,0,r); ctx.closePath(); ctx.fill(); }
+      }
+      const text = document.getElementById('lgText').value || 'DX';
+      const font = document.getElementById('lgFont').value;
+      const color = document.getElementById('lgColor').value;
+      ctx.fillStyle = color;
+      ctx.font = `bold 140px ${font}`;
+      ctx.textAlign='center'; ctx.textBaseline='middle';
+      ctx.fillText(text, 200, 210);
+    }
+    document.getElementById('lgGen').onclick = draw;
+    draw();
+    document.getElementById('lgPng').onclick = ()=>{
+      const c = document.getElementById('lgCanvas');
+      const a = document.createElement('a'); a.href=c.toDataURL('image/png'); a.download='devnex-logo.png'; a.click();
+    };
+    document.getElementById('lgSvg').onclick = ()=>{
+      const text = document.getElementById('lgText').value || 'DX';
+      const font = document.getElementById('lgFont').value;
+      const color = document.getElementById('lgColor').value;
+      const bg = document.getElementById('lgBg').value;
+      const shape = document.getElementById('lgShape').value;
+      let shapeEl = '';
+      if(shape==='circle') shapeEl = `<circle cx="200" cy="200" r="200" fill="${bg}"/>`;
+      else if(shape==='square') shapeEl = `<rect width="400" height="400" rx="60" fill="${bg}"/>`;
+      const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400">${shapeEl}<text x="200" y="215" font-family="${font}" font-size="140" font-weight="bold" fill="${color}" text-anchor="middle">${text}</text></svg>`;
+      const blob = new Blob([svg],{type:'image/svg+xml'});
+      const a = document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='devnex-logo.svg'; a.click();
+    };
+  },
+  photoeditor(){
+    const b = document.getElementById('toolBody');
+    b.innerHTML = `<div class="row"><input type="file" id="peFile" accept="image/*"></div>
+      <canvas id="peCanvas" style="max-width:100%; margin-top:10px; border-radius:10px; border:1px solid var(--border); touch-action:none;"></canvas>
+      <label>Brightness</label><input type="range" id="peBright" min="50" max="150" value="100">
+      <label>Contrast</label><input type="range" id="peContrast" min="50" max="150" value="100">
+      <div class="row"><button class="btn secondary" id="peRotate">Rotate 90°</button><button class="btn secondary" id="peApplyFilter">Apply Brightness/Contrast</button></div>
+      <label>Resize Width (px)</label><input type="number" id="peW">
+      <label>Resize Height (px)</label><input type="number" id="peH">
+      <div class="row"><button class="btn secondary" id="peResize">Apply Resize</button></div>
+      <label>Crop (x, y, width, height in px)</label>
+      <div class="row"><input type="number" id="peCx" placeholder="x"><input type="number" id="peCy" placeholder="y"><input type="number" id="peCw" placeholder="width"><input type="number" id="peCh" placeholder="height"></div>
+      <div class="row"><button class="btn secondary" id="peCrop">Apply Crop</button></div>
+      <label>Text Overlay</label><input type="text" id="peText" placeholder="Text likhein">
+      <div class="row"><input type="color" id="peTextColor" value="#ffffff"><input type="number" id="peTextSize" value="40" style="width:80px;"><button class="btn secondary" id="peAddText">Add Text</button></div>
+      <div class="row"><button class="btn secondary" id="peDrawToggle">Draw Mode: OFF</button><input type="color" id="peDrawColor" value="#ff0000"><input type="number" id="peDrawWidth" value="4" style="width:60px;"></div>
+      <label>JPEG Quality (compression)</label><input type="range" id="peQuality" min="10" max="100" value="90">
+      <div class="row"><button class="btn" id="pePng">Download PNG</button><button class="btn" id="peJpg">Download JPEG</button></div>`;
+    const canvas = document.getElementById('peCanvas'); const ctx = canvas.getContext('2d');
+    let drawMode=false, drawing=false;
+    function loadImageToCanvas(img){
+      const maxW=1000; const scale = Math.min(1, maxW/img.width);
+      canvas.width = img.width*scale; canvas.height = img.height*scale;
+      ctx.filter='none'; ctx.drawImage(img,0,0,canvas.width,canvas.height);
+      document.getElementById('peW').value = canvas.width; document.getElementById('peH').value = canvas.height;
+    }
+    function bake(cb){ const img = new Image(); img.onload = ()=>{ cb(img); }; img.src = canvas.toDataURL(); }
+    document.getElementById('peFile').onchange = (e)=>{
+      const f = e.target.files[0]; if(!f) return;
+      const img = new Image(); img.onload = ()=>{ loadImageToCanvas(img); }; img.src = URL.createObjectURL(f);
+    };
+    document.getElementById('peRotate').onclick = ()=>{
+      bake((img)=>{
+        const w=canvas.width, h=canvas.height; canvas.width=h; canvas.height=w;
+        ctx.save(); ctx.translate(h/2,w/2); ctx.rotate(Math.PI/2); ctx.drawImage(img,-w/2,-h/2); ctx.restore();
+        document.getElementById('peW').value=canvas.width; document.getElementById('peH').value=canvas.height;
+      });
+    };
+    document.getElementById('peApplyFilter').onclick = ()=>{
+      bake((img)=>{
+        const b2 = document.getElementById('peBright').value, c2 = document.getElementById('peContrast').value;
+        ctx.filter = `brightness(${b2}%) contrast(${c2}%)`;
+        ctx.clearRect(0,0,canvas.width,canvas.height);
+        ctx.drawImage(img,0,0,canvas.width,canvas.height);
+        ctx.filter='none';
+      });
+    };
+    document.getElementById('peResize').onclick = ()=>{
+      const w = +document.getElementById('peW').value, h = +document.getElementById('peH').value;
+      if(!w||!h) return;
+      bake((img)=>{ canvas.width=w; canvas.height=h; ctx.drawImage(img,0,0,w,h); });
+    };
+    document.getElementById('peCrop').onclick = ()=>{
+      const x=+document.getElementById('peCx').value||0, y=+document.getElementById('peCy').value||0, w=+document.getElementById('peCw').value||canvas.width, h=+document.getElementById('peCh').value||canvas.height;
+      try{
+        const imgData = ctx.getImageData(x,y,w,h);
+        canvas.width=w; canvas.height=h; ctx.putImageData(imgData,0,0);
+        document.getElementById('peW').value=w; document.getElementById('peH').value=h;
+      }catch(e){}
+    };
+    document.getElementById('peAddText').onclick = ()=>{
+      const text = document.getElementById('peText').value; if(!text) return;
+      const color = document.getElementById('peTextColor').value;
+      const size = +document.getElementById('peTextSize').value || 40;
+      ctx.fillStyle=color; ctx.font = `bold ${size}px sans-serif`; ctx.textAlign='center';
+      ctx.fillText(text, canvas.width/2, canvas.height-30);
+    };
+    document.getElementById('peDrawToggle').onclick = (e)=>{ drawMode = !drawMode; e.target.textContent = 'Draw Mode: '+(drawMode?'ON':'OFF'); };
+    function getPos(e){
+      const rect = canvas.getBoundingClientRect();
+      const scaleX = canvas.width/rect.width, scaleY = canvas.height/rect.height;
+      const cx = (e.touches? e.touches[0].clientX : e.clientX) - rect.left;
+      const cy = (e.touches? e.touches[0].clientY : e.clientY) - rect.top;
+      return {x:cx*scaleX, y:cy*scaleY};
+    }
+    canvas.addEventListener('pointerdown', (e)=>{ if(!drawMode) return; drawing=true; const p=getPos(e); ctx.beginPath(); ctx.moveTo(p.x,p.y); });
+    canvas.addEventListener('pointermove', (e)=>{ if(!drawMode||!drawing) return; const p=getPos(e); ctx.lineTo(p.x,p.y); ctx.strokeStyle=document.getElementById('peDrawColor').value; ctx.lineWidth=+document.getElementById('peDrawWidth').value; ctx.lineCap='round'; ctx.stroke(); });
+    canvas.addEventListener('pointerup', ()=>{ drawing=false; });
+    document.getElementById('pePng').onclick = ()=>{ const a = document.createElement('a'); a.href=canvas.toDataURL('image/png'); a.download='devnex-photo.png'; a.click(); };
+    document.getElementById('peJpg').onclick = ()=>{ const q = (+document.getElementById('peQuality').value)/100; const a = document.createElement('a'); a.href=canvas.toDataURL('image/jpeg',q); a.download='devnex-photo.jpg'; a.click(); };
+  },
+  dbmanager(){
+    const b = document.getElementById('toolBody');
+    b.innerHTML = `<div class="row"><select id="dbTableSel" style="flex:1;"></select><button class="btn secondary" id="dbNewTable">+ Table</button><button class="btn secondary" id="dbDeleteTable">Delete Table</button></div>
+      <label>Search</label><input type="text" id="dbSearch" placeholder="Records mein search karein">
+      <div id="dbRecords" style="margin-top:10px;"></div>
+      <label>Naya Record (JSON object)</label><textarea id="dbNewRecord" placeholder='{"name":"John","age":30}'></textarea>
+      <div class="row"><button class="btn" id="dbAddRecord">Record Add Karein</button></div>
+      <div id="dbErr" class="err"></div>
+      <div class="row"><button class="btn secondary" id="dbExport">Export Table</button><label class="btn secondary" style="cursor:pointer;">Import<input type="file" id="dbImport" accept=".json" style="display:none;"></label></div>`;
+    function listTables(){ try{ return JSON.parse(localStorage.getItem('devnex-db-tables')||'[]'); }catch(e){ return []; } }
+    function saveTables(list){ try{ localStorage.setItem('devnex-db-tables', JSON.stringify(list)); }catch(e){} }
+    function loadTable(name){ try{ return JSON.parse(localStorage.getItem('devnex-db-'+name)||'[]'); }catch(e){ return []; } }
+    function saveTable(name, data){ try{ localStorage.setItem('devnex-db-'+name, JSON.stringify(data)); }catch(e){} }
+    let tables = listTables();
+    if(!tables.length){ tables=['my_table']; saveTables(tables); saveTable('my_table', []); }
+    let activeTable = tables[0];
+    function renderTableSel(){
+      const sel = document.getElementById('dbTableSel');
+      sel.innerHTML = tables.map(t=>`<option ${t===activeTable?'selected':''}>${t}</option>`).join('');
+      sel.onchange = ()=>{ activeTable = sel.value; renderRecords(); };
+    }
+    function renderRecords(){
+      const q = (document.getElementById('dbSearch').value||'').toLowerCase();
+      const data = loadTable(activeTable);
+      const filtered = data.map((r,i)=>({r,i})).filter(({r})=> !q || JSON.stringify(r).toLowerCase().indexOf(q)>-1);
+      document.getElementById('dbRecords').innerHTML = filtered.length ? filtered.map(({r,i})=>`<div class="output" style="margin-top:6px;"><div style="display:flex; justify-content:space-between; gap:8px;"><pre style="white-space:pre-wrap; margin:0; flex:1;">${JSON.stringify(r,null,2)}</pre><button class="btn secondary" style="padding:4px 10px; height:fit-content;" data-del="${i}">Delete</button></div></div>`).join('') : '<p style="color:var(--muted);">Koi record nahi hai.</p>';
+      document.querySelectorAll('[data-del]').forEach(btn=>{ btn.onclick = ()=>{ const d = loadTable(activeTable); d.splice(+btn.dataset.del,1); saveTable(activeTable,d); renderRecords(); }; });
+    }
+    document.getElementById('dbSearch').addEventListener('input', renderRecords);
+    document.getElementById('dbNewTable').onclick = ()=>{
+      const name = prompt('Table ka naam:'); if(!name) return;
+      if(tables.indexOf(name)>-1){ alert('Yeh naam pehle se hai.'); return; }
+      tables.push(name); saveTables(tables); saveTable(name, []); activeTable = name; renderTableSel(); renderRecords();
+    };
+    document.getElementById('dbDeleteTable').onclick = ()=>{
+      if(tables.length<=1){ alert('Kam se kam ek table zaroori hai.'); return; }
+      if(!confirm('Table delete karein?')) return;
+      try{ localStorage.removeItem('devnex-db-'+activeTable); }catch(e){}
+      tables = tables.filter(t=>t!==activeTable); saveTables(tables); activeTable = tables[0]; renderTableSel(); renderRecords();
+    };
+    document.getElementById('dbAddRecord').onclick = ()=>{
+      const err = document.getElementById('dbErr');
+      try{
+        const obj = JSON.parse(document.getElementById('dbNewRecord').value);
+        const d = loadTable(activeTable); d.push(obj); saveTable(activeTable,d);
+        document.getElementById('dbNewRecord').value=''; err.textContent=''; renderRecords();
+      }catch(e){ err.textContent = 'Invalid JSON: '+e.message; }
+    };
+    document.getElementById('dbExport').onclick = ()=>{
+      const blob = new Blob([JSON.stringify(loadTable(activeTable),null,2)],{type:'application/json'});
+      const a = document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=activeTable+'.json'; a.click();
+    };
+    document.getElementById('dbImport').onchange = (e)=>{
+      const f = e.target.files[0]; if(!f) return;
+      const reader = new FileReader();
+      reader.onload = ()=>{
+        try{
+          const data = JSON.parse(reader.result);
+          if(!Array.isArray(data)) throw new Error('bad');
+          saveTable(activeTable, data); renderRecords();
+        }catch(err){ document.getElementById('dbErr').textContent='Yeh valid JSON array file nahi hai.'; }
+      };
+      reader.readAsText(f);
+    };
+    renderTableSel(); renderRecords();
+  },
+  photopuzzle(){
+    const b = document.getElementById('toolBody');
+    b.innerHTML = `<p style="font-size:14px;">Koi bhi photo chunein, woh tukdon mein kat ke shuffle ho jayegi — unhe ungli se chhoo kar sahi jagah par ghuma-ghumake lagayein.</p>
+      <div class="row"><input type="file" id="ppFile" accept="image/*"></div>
+      <label>Grid Size</label><select id="ppGrid"><option value="3">3 x 3 (Aasaan)</option><option value="4" selected>4 x 4 (Medium)</option><option value="5">5 x 5 (Mushkil)</option></select>
+      <div class="row"><button class="btn" id="ppStart">Puzzle Banayein</button><button class="btn secondary" id="ppShuffle">Dobara Shuffle Karein</button><button class="btn secondary" id="ppPreview">Original Dekhein</button></div>
+      <div id="ppErr" class="err"></div>
+      <div id="ppStatus" style="font-size:13px; color:var(--muted); margin:6px 0;"></div>
+      <div id="ppBoard" style="position:relative; width:100%; aspect-ratio:1; background:var(--surface2); border:1px solid var(--border); border-radius:10px; overflow:hidden; touch-action:none;"></div>`;
+    let img=null, grid=4, pieces=[], cellSize=0;
+    document.getElementById('ppFile').onchange = (e)=>{
+      const f = e.target.files[0]; if(!f) return;
+      const im = new Image();
+      im.onload = ()=>{ img = im; document.getElementById('ppErr').textContent=''; };
+      im.onerror = ()=>{ document.getElementById('ppErr').textContent='Photo load nahi hui.'; };
+      im.src = URL.createObjectURL(f);
+    };
+    function buildPuzzle(){
+      if(!img){ document.getElementById('ppErr').textContent='Pehle ek photo chunein.'; return; }
+      grid = +document.getElementById('ppGrid').value;
+      const board = document.getElementById('ppBoard');
+      const boardSize = board.clientWidth;
+      cellSize = boardSize/grid;
+      const src = document.createElement('canvas');
+      src.width = boardSize; src.height = boardSize;
+      const sctx = src.getContext('2d');
+      const side = Math.min(img.width, img.height);
+      const sx = (img.width-side)/2, sy = (img.height-side)/2;
+      sctx.drawImage(img, sx, sy, side, side, 0, 0, boardSize, boardSize);
+      pieces = [];
+      for(let r=0;r<grid;r++){
+        for(let c=0;c<grid;c++){
+          const pc = document.createElement('canvas');
+          pc.width = cellSize; pc.height = cellSize;
+          const pctx = pc.getContext('2d');
+          pctx.drawImage(src, c*cellSize, r*cellSize, cellSize, cellSize, 0,0, cellSize, cellSize);
+          pieces.push({canvas:pc, correctRow:r, correctCol:c});
+        }
+      }
+      placeShuffled();
+    }
+    function placeShuffled(){
+      const board = document.getElementById('ppBoard');
+      board.innerHTML='';
+      const positions = [];
+      for(let r=0;r<grid;r++) for(let c=0;c<grid;c++) positions.push({r,c});
+      for(let i=positions.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); const t=positions[i]; positions[i]=positions[j]; positions[j]=t; }
+      pieces.forEach((p,i)=>{
+        const pos = positions[i];
+        p.curRow = pos.r; p.curCol = pos.c;
+        const el = document.createElement('div');
+        el.style.cssText = `position:absolute; width:${cellSize}px; height:${cellSize}px; left:${pos.c*cellSize}px; top:${pos.r*cellSize}px; border:1px solid rgba(255,255,255,0.3); cursor:grab;`;
+        el.appendChild(p.canvas);
+        el.dataset.idx = i;
+        board.appendChild(el);
+        makeDraggable(el, p, board);
+      });
+      updateStatus();
+    }
+    function makeDraggable(el, piece, board){
+      let startX, startY, origLeft, origTop, dragging=false;
+      function pointerDown(e){ dragging=true; el.style.zIndex=100; el.style.cursor='grabbing'; const pt = e.touches? e.touches[0] : e; startX = pt.clientX; startY = pt.clientY; origLeft = parseFloat(el.style.left); origTop = parseFloat(el.style.top); e.preventDefault(); }
+      function pointerMove(e){ if(!dragging) return; const pt = e.touches? e.touches[0] : e; const dx = pt.clientX-startX, dy = pt.clientY-startY; el.style.left = (origLeft+dx)+'px'; el.style.top = (origTop+dy)+'px'; }
+      function pointerUp(){
+        if(!dragging) return; dragging=false; el.style.zIndex=1; el.style.cursor='grab';
+        let left = parseFloat(el.style.left), top = parseFloat(el.style.top);
+        let col = Math.max(0, Math.min(grid-1, Math.round(left/cellSize)));
+        let row = Math.max(0, Math.min(grid-1, Math.round(top/cellSize)));
+        const other = pieces.find(p=>p!==piece && p.curRow===row && p.curCol===col);
+        if(other){ other.curRow = piece.curRow; other.curCol = piece.curCol; const oEl = board.querySelector(`[data-idx="${pieces.indexOf(other)}"]`); if(oEl){ oEl.style.left=(other.curCol*cellSize)+'px'; oEl.style.top=(other.curRow*cellSize)+'px'; } }
+        piece.curRow = row; piece.curCol = col;
+        el.style.left = (col*cellSize)+'px'; el.style.top = (row*cellSize)+'px';
+        updateStatus();
+      }
+      el.addEventListener('pointerdown', pointerDown);
+      el.addEventListener('pointermove', pointerMove);
+      el.addEventListener('pointerup', pointerUp);
+      el.addEventListener('pointerleave', pointerUp);
+    }
+    function updateStatus(){
+      const solved = pieces.every(p=>p.curRow===p.correctRow && p.curCol===p.correctCol);
+      const s = document.getElementById('ppStatus'); if(!s) return;
+      s.textContent = solved ? '🎉 Solved! Puzzle sahi se ban gaya.' : `Tukde ghuma ke sahi jagah lagayein (${grid*grid} tukde hain).`;
+    }
+    document.getElementById('ppStart').onclick = buildPuzzle;
+    document.getElementById('ppShuffle').onclick = ()=>{ if(pieces.length) placeShuffled(); };
+    document.getElementById('ppPreview').onclick = ()=>{
+      if(!img) return;
+      const board = document.getElementById('ppBoard');
+      const existing = board.querySelector('img.ppPreviewImg');
+      if(existing){ existing.remove(); return; }
+      const imEl = document.createElement('img');
+      imEl.className='ppPreviewImg';
+      imEl.src = img.src;
+      imEl.style.cssText = 'position:absolute; inset:0; width:100%; height:100%; object-fit:cover; z-index:200;';
+      imEl.onclick = ()=>imEl.remove();
+      board.appendChild(imEl);
+    };
+  },
+  currency(){
+    const b = document.getElementById('toolBody');
+    b.innerHTML = `<p style="font-size:13px; color:var(--muted);">Yeh app offline kaam karta hai, isliye live rates khud nahi la sakta — aaj ka rate Google par search karke yahan daal dein.</p>
+      <label>Amount</label><input type="number" id="curAmt" value="1">
+      <label>1 unit ka rate (jis currency mein chahiye)</label><input type="number" id="curRate" placeholder="jaise 83.2">
+      <div class="row"><button class="btn" id="curBtn">Convert</button></div>
+      <div class="output" id="curOut"></div>`;
+    document.getElementById('curBtn').onclick = ()=>{
+      const amt = +document.getElementById('curAmt').value, rate = +document.getElementById('curRate').value;
+      if(!amt || !rate){ document.getElementById('curOut').textContent='Amount aur rate dono daalein'; return; }
+      document.getElementById('curOut').textContent = `${amt} × ${rate} = ${(amt*rate).toFixed(2)}`;
+    };
+  },
+  agecalc(){
+    const b = document.getElementById('toolBody');
+    b.innerHTML = `<label>Janam Tithi (Date of Birth)</label><input type="date" id="ageDob">
+      <div class="row"><button class="btn" id="ageBtn">Umar Nikalein</button></div>
+      <div class="output" id="ageOut"></div>`;
+    document.getElementById('ageBtn').onclick = ()=>{
+      const dob = document.getElementById('ageDob').value;
+      if(!dob){ document.getElementById('ageOut').textContent='Date chunein'; return; }
+      const d = new Date(dob), now = new Date();
+      let years = now.getFullYear()-d.getFullYear();
+      let months = now.getMonth()-d.getMonth();
+      let days = now.getDate()-d.getDate();
+      if(days<0){ months--; days += new Date(now.getFullYear(), now.getMonth(), 0).getDate(); }
+      if(months<0){ years--; months+=12; }
+      document.getElementById('ageOut').textContent = `${years} saal, ${months} mahine, ${days} din`;
+    };
+  },
+  emicalc(){
+    const b = document.getElementById('toolBody');
+    b.innerHTML = `<label>Loan Amount</label><input type="number" id="emiP" placeholder="jaise 100000">
+      <label>Interest Rate (saalana %)</label><input type="number" id="emiR" placeholder="jaise 9.5">
+      <label>Tenure (mahine)</label><input type="number" id="emiN" placeholder="jaise 36">
+      <div class="row"><button class="btn" id="emiBtn">EMI Nikalein</button></div>
+      <div class="output" id="emiOut"></div>
+      <p style="font-size:11px; color:var(--muted); margin-top:8px;">Yeh general calculation hai, financial advice nahi — exact terms ke liye bank se confirm karein.</p>`;
+    document.getElementById('emiBtn').onclick = ()=>{
+      const P = +document.getElementById('emiP').value, annualR = +document.getElementById('emiR').value, n = +document.getElementById('emiN').value;
+      if(!P||!annualR||!n){ document.getElementById('emiOut').textContent='Saari values daalein'; return; }
+      const r = annualR/12/100;
+      const emi = P*r*Math.pow(1+r,n)/(Math.pow(1+r,n)-1);
+      const total = emi*n; const interest = total-P;
+      document.getElementById('emiOut').textContent = `Monthly EMI: ₹${emi.toFixed(2)}\nTotal Payment: ₹${total.toFixed(2)}\nTotal Interest: ₹${interest.toFixed(2)}`;
+    };
+  },
+  gstcalc(){
+    const b = document.getElementById('toolBody');
+    b.innerHTML = `<label>Amount</label><input type="number" id="gstAmt" placeholder="jaise 1000">
+      <label>GST %</label><select id="gstPct"><option>5</option><option>12</option><option selected>18</option><option>28</option></select>
+      <div class="row"><button class="btn" id="gstAddBtn">GST Add Karein</button><button class="btn secondary" id="gstRemoveBtn">GST Hatayein</button></div>
+      <div class="output" id="gstOut"></div>`;
+    document.getElementById('gstAddBtn').onclick = ()=>{
+      const amt = +document.getElementById('gstAmt').value, pct = +document.getElementById('gstPct').value;
+      if(!amt){ document.getElementById('gstOut').textContent='Amount daalein'; return; }
+      const gst = amt*pct/100;
+      document.getElementById('gstOut').textContent = `GST Amount: ₹${gst.toFixed(2)}\nTotal (GST included): ₹${(amt+gst).toFixed(2)}`;
+    };
+    document.getElementById('gstRemoveBtn').onclick = ()=>{
+      const amt = +document.getElementById('gstAmt').value, pct = +document.getElementById('gstPct').value;
+      if(!amt){ document.getElementById('gstOut').textContent='Amount daalein'; return; }
+      const base = amt/(1+pct/100); const gst = amt-base;
+      document.getElementById('gstOut').textContent = `Base Amount (GST se pehle): ₹${base.toFixed(2)}\nGST Amount: ₹${gst.toFixed(2)}`;
+    };
+  },
+  tipcalc(){
+    const b = document.getElementById('toolBody');
+    b.innerHTML = `<label>Bill Amount</label><input type="number" id="tipBill" placeholder="jaise 1200">
+      <label>Tip %</label><input type="number" id="tipPct" value="10">
+      <label>Kitne log hain (split ke liye)</label><input type="number" id="tipPeople" value="1">
+      <div class="row"><button class="btn" id="tipBtn">Calculate</button></div>
+      <div class="output" id="tipOut"></div>`;
+    document.getElementById('tipBtn').onclick = ()=>{
+      const bill = +document.getElementById('tipBill').value, pct = +document.getElementById('tipPct').value||0, people = +document.getElementById('tipPeople').value||1;
+      if(!bill){ document.getElementById('tipOut').textContent='Bill amount daalein'; return; }
+      const tip = bill*pct/100; const total = bill+tip; const perPerson = total/people;
+      document.getElementById('tipOut').textContent = `Tip: ₹${tip.toFixed(2)}\nTotal: ₹${total.toFixed(2)}\nPrati Vyakti: ₹${perPerson.toFixed(2)}`;
+    };
+  },
+  flashlight(){
+    const b = document.getElementById('toolBody');
+    b.innerHTML = `<p style="font-size:13px; color:var(--muted);">Yeh mostly Android Chrome par kaam karta hai; iPhone/Safari isse support nahi karta.</p>
+      <div class="row"><button class="btn" id="flOn">Flashlight ON</button><button class="btn secondary" id="flOff">Flashlight OFF</button></div>
+      <div id="flErr" class="err"></div>`;
+    let flStream=null, flTrack=null;
+    document.getElementById('flOn').onclick = async ()=>{
+      try{
+        flStream = await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'}});
+        flTrack = flStream.getVideoTracks()[0];
+        await flTrack.applyConstraints({advanced:[{torch:true}]});
+        document.getElementById('flErr').textContent='';
+      }catch(e){ document.getElementById('flErr').textContent = 'Flashlight is device/browser par support nahi hai.'; }
+    };
+    document.getElementById('flOff').onclick = ()=>{
+      if(flTrack){ try{ flTrack.applyConstraints({advanced:[{torch:false}]}); }catch(e){} }
+      if(flStream){ flStream.getTracks().forEach(t=>t.stop()); }
+    };
+  },
+  compass(){
+    const b = document.getElementById('toolBody');
+    b.innerHTML = `<p style="font-size:13px; color:var(--muted);">Approximate compass hai, device sensor par depend karta hai. iPhone par permission allow karni hogi.</p>
+      <div class="row"><button class="btn" id="cmpStart">Compass Shuru Karein</button></div>
+      <div id="cmpErr" class="err"></div>
+      <div style="text-align:center; margin-top:16px;"><div id="cmpNeedle" style="font-size:60px; transition:transform 0.2s;">🧭</div><div id="cmpDeg" style="font-size:20px; margin-top:8px;"></div></div>`;
+    function handle(e){
+      let heading = e.webkitCompassHeading!==undefined ? e.webkitCompassHeading : (360-(e.alpha||0));
+      const n = document.getElementById('cmpNeedle'); if(!n) return;
+      n.style.transform = `rotate(${heading}deg)`;
+      document.getElementById('cmpDeg').textContent = Math.round(heading)+'°';
+    }
+    document.getElementById('cmpStart').onclick = async ()=>{
+      try{
+        if(typeof DeviceOrientationEvent !== 'undefined' && DeviceOrientationEvent.requestPermission){
+          const perm = await DeviceOrientationEvent.requestPermission();
+          if(perm !== 'granted'){ document.getElementById('cmpErr').textContent='Permission nahi mili.'; return; }
+        }
+        window.addEventListener('deviceorientation', handle);
+        document.getElementById('cmpErr').textContent='';
+      }catch(e){ document.getElementById('cmpErr').textContent = 'Compass is device par support nahi hai.'; }
+    };
+  },
+  ruler(){
+    const b = document.getElementById('toolBody');
+    b.innerHTML = `<p style="font-size:13px; color:var(--muted);">Yeh approximate ruler hai — apne phone ki screen size (diagonal inches mein) daalein, andazan measurement milega, exact nahi hoga.</p>
+      <label>Screen Diagonal Size (inches)</label><input type="number" id="rulerSize" value="6.1">
+      <div class="row"><button class="btn" id="rulerGo">Ruler Dikhayein</button></div>
+      <div id="rulerArea" style="margin-top:14px; overflow-x:auto;"></div>`;
+    document.getElementById('rulerGo').onclick = ()=>{
+      const diag = +document.getElementById('rulerSize').value || 6.1;
+      const wpx = window.screen.width, hpx = window.screen.height;
+      const diagPx = Math.sqrt(wpx*wpx + hpx*hpx);
+      const ppi = diagPx / diag;
+      const cmPerPixel = 2.54/ppi;
+      const totalCm = 15;
+      const widthPx = totalCm/cmPerPixel;
+      let marks = '';
+      for(let cm=0; cm<=totalCm; cm++){
+        marks += `<div style="position:absolute; left:${cm/cmPerPixel}px; top:0; width:1px; height:${cm%5===0?'24px':'14px'}; background:var(--text);"></div>`;
+        if(cm%5===0) marks += `<div style="position:absolute; left:${cm/cmPerPixel+2}px; top:26px; font-size:10px;">${cm}</div>`;
+      }
+      document.getElementById('rulerArea').innerHTML = `<div style="position:relative; height:50px; width:${widthPx}px; background:var(--surface2); border:1px solid var(--border); border-radius:6px;">${marks}</div><p style="font-size:11px; color:var(--muted); margin-top:4px;">cm mein (andazan)</p>`;
+    };
+  },
+  qrgen(){
+    const b = document.getElementById('toolBody');
+    b.innerHTML = `<label>Text ya Link</label><textarea id="qrText" placeholder="https://example.com ya koi bhi text"></textarea>
+      <div class="row"><button class="btn" id="qrBtn">QR Code Banayein</button></div>
+      <div id="qrErr" class="err"></div>
+      <div id="qrBox" style="margin-top:14px; display:flex; justify-content:center;"></div>
+      <div class="row" id="qrDownloadRow" style="display:none;"><button class="btn secondary" id="qrDownload">Download PNG</button></div>`;
+    document.getElementById('qrBtn').onclick = ()=>{
+      const text = document.getElementById('qrText').value.trim();
+      const box = document.getElementById('qrBox'); box.innerHTML='';
+      if(!text){ document.getElementById('qrErr').textContent='Pehle kuch text ya link likhein'; return; }
+      if(!window.QRCode){ document.getElementById('qrErr').textContent='QR library load nahi hui, internet check karein.'; return; }
+      document.getElementById('qrErr').textContent='';
+      new QRCode(box, {text, width:220, height:220});
+      document.getElementById('qrDownloadRow').style.display='flex';
+    };
+    document.getElementById('qrDownload').onclick = ()=>{
+      const img = document.querySelector('#qrBox img') || document.querySelector('#qrBox canvas');
+      if(!img) return;
+      const a = document.createElement('a');
+      a.href = img.tagName==='CANVAS' ? img.toDataURL('image/png') : img.src;
+      a.download='devnex-qr.png'; a.click();
+    };
+  },
+  gradientgen(){
+    const b = document.getElementById('toolBody');
+    b.innerHTML = `<label>Color 1</label><input type="color" id="gradC1" value="#6d5efc">
+      <label>Color 2</label><input type="color" id="gradC2" value="#00c9a7">
+      <label>Angle (degrees)</label><input type="range" id="gradAngle" min="0" max="360" value="90">
+      <div id="gradPreview" style="height:120px; border-radius:12px; margin-top:12px; border:1px solid var(--border);"></div>
+      <div class="output" id="gradCss"></div>
+      <div class="row"><button class="btn secondary" id="gradCopy">CSS Copy Karein</button></div>`;
+    function update(){
+      const c1 = document.getElementById('gradC1').value, c2 = document.getElementById('gradC2').value, ang = document.getElementById('gradAngle').value;
+      const css = `linear-gradient(${ang}deg, ${c1}, ${c2})`;
+      document.getElementById('gradPreview').style.background = css;
+      document.getElementById('gradCss').textContent = `background: ${css};`;
+    }
+    ['gradC1','gradC2','gradAngle'].forEach(id=>document.getElementById(id).addEventListener('input', update));
+    update();
+    document.getElementById('gradCopy').onclick = ()=>navigator.clipboard?.writeText(document.getElementById('gradCss').textContent);
+  },
+  imgmeta(){
+    const b = document.getElementById('toolBody');
+    b.innerHTML = `<div class="row"><input type="file" id="imFile" accept="image/*"></div><div class="output" id="imOut"></div>`;
+    document.getElementById('imFile').onchange = (e)=>{
+      const f = e.target.files[0]; if(!f) return;
+      const img = new Image();
+      img.onload = ()=>{
+        document.getElementById('imOut').textContent = `File Naam: ${f.name}\nType: ${f.type}\nSize: ${(f.size/1024).toFixed(1)} KB\nDimensions: ${img.width} x ${img.height} px\nLast Modified: ${new Date(f.lastModified).toLocaleString()}`;
+      };
+      img.src = URL.createObjectURL(f);
+    };
+  },
+  aspectratio(){
+    const b = document.getElementById('toolBody');
+    b.innerHTML = `<label>Width</label><input type="number" id="arW" placeholder="jaise 1920">
+      <label>Height</label><input type="number" id="arH" placeholder="jaise 1080">
+      <div class="row"><button class="btn" id="arBtn">Ratio Nikalein</button></div>
+      <div class="output" id="arOut"></div>
+      <label style="margin-top:14px;">Naya Width (same ratio mein Height nikalne ke liye)</label><input type="number" id="arNewW">
+      <div class="row"><button class="btn secondary" id="arCalcH">Height Nikalein</button></div>
+      <div class="output" id="arOut2"></div>`;
+    function gcdCalc(a,b2){ return b2===0?a:gcdCalc(b2,a%b2); }
+    document.getElementById('arBtn').onclick = ()=>{
+      const w = +document.getElementById('arW').value, h = +document.getElementById('arH').value;
+      if(!w||!h){ document.getElementById('arOut').textContent='Width aur height dono daalein'; return; }
+      const g = gcdCalc(w,h);
+      document.getElementById('arOut').textContent = `Ratio: ${w/g}:${h/g}`;
+    };
+    document.getElementById('arCalcH').onclick = ()=>{
+      const w = +document.getElementById('arW').value, h = +document.getElementById('arH').value, newW = +document.getElementById('arNewW').value;
+      if(!w||!h||!newW){ document.getElementById('arOut2').textContent='Pehle upar wale fields bhi bharein'; return; }
+      document.getElementById('arOut2').textContent = `Naya Height: ${Math.round(newW*h/w)} px`;
+    };
+  },
+  filesizeconv(){
+    const b = document.getElementById('toolBody');
+    b.innerHTML = `<label>Value</label><input type="number" id="fsVal" value="1">
+      <label>From</label><select id="fsFrom"><option>Bytes</option><option>KB</option><option selected>MB</option><option>GB</option><option>TB</option></select>
+      <div class="row"><button class="btn" id="fsBtn">Convert Karein</button></div>
+      <div class="output" id="fsOut"></div>`;
+    const UNITS = {Bytes:1, KB:1024, MB:1024*1024, GB:1024*1024*1024, TB:1024*1024*1024*1024};
+    document.getElementById('fsBtn').onclick = ()=>{
+      const val = +document.getElementById('fsVal').value, from = document.getElementById('fsFrom').value;
+      if(val!==0 && !val){ document.getElementById('fsOut').textContent='Value daalein'; return; }
+      const bytes = val*UNITS[from];
+      document.getElementById('fsOut').textContent = Object.keys(UNITS).map(u=>`${u}: ${(bytes/UNITS[u]).toFixed(4)}`).join('\n');
+    };
+  }
+};
+
+function calcInput(v){
+  const disp = document.getElementById('calcDisp');
+  if(v==='C'){ window.__calcExpr=''; }
+  else if(v==='⌫'){ window.__calcExpr = window.__calcExpr.slice(0,-1); }
+  else if(v==='='){
+    try{
+      const expr = window.__calcExpr.replace(/[^0-9+\-*/.%()]/g,'');
+      const result = Function('"use strict";return ('+expr+')')();
+      window.__calcExpr = String(result);
+    }catch(e){ window.__calcExpr = 'Error'; }
+  } else {
+    window.__calcExpr += v;
+  }
+  disp.textContent = window.__calcExpr || '0';
+}
+
+// Theme
+const themeBtn = document.getElementById('themeToggle');
+function applyTheme(t){ document.documentElement.setAttribute('data-theme', t); }
+let savedTheme = 'auto';
+try{ savedTheme = localStorage.getItem('devnex-theme') || 'auto'; }catch(e){}
+if(savedTheme!=='auto') applyTheme(savedTheme);
+themeBtn.onclick = ()=>{
+  const cur = document.documentElement.getAttribute('data-theme');
+  const next = cur==='dark' ? 'light' : 'dark';
+  applyTheme(next);
+  try{ localStorage.setItem('devnex-theme', next); }catch(e){}
+  themeBtn.classList.remove('spinning'); void themeBtn.offsetWidth; themeBtn.classList.add('spinning');
+};
+
+function checkRoutines(){
+  let routines=[]; try{ routines = JSON.parse(localStorage.getItem('devnex-routines')||'[]'); }catch(e){}
+  const now = new Date();
+  const cur = String(now.getHours()).padStart(2,'0')+':'+String(now.getMinutes()).padStart(2,'0');
+  window.__firedSet = window.__firedSet || new Set();
+  routines.forEach(r=>{
+    if(r.active && r.time===cur && !window.__firedSet.has(r.id+cur)){
+      window.__firedSet.add(r.id+cur);
+      try{
+        const ctx = new (window.AudioContext||window.webkitAudioContext)();
+        const o = ctx.createOscillator(); o.frequency.value=880; o.connect(ctx.destination); o.start();
+        setTimeout(()=>{ try{o.stop(); ctx.close();}catch(e){} },600);
+      }catch(e){}
+      if('Notification' in window && Notification.permission==='granted'){
+        try{ new Notification('DEVNEX Reminder', {body:r.name}); }catch(e){}
+      }
+      alert('⏰ Reminder: '+r.name);
+    }
+  });
+}
+setInterval(checkRoutines, 15000);
+
+renderDashboard();
+</script>
+</body>
+</html>
